@@ -2,7 +2,7 @@
 
 Projeto: automacao editorial e SEO do `clube3dbrasil.com`, nicho de impressao 3D.
 
-Antes de explorar codigo, tente o `code-review-graph`. Se o grafo estiver vazio, use `rg` e leituras pontuais.
+Antes de explorar codigo, tente o `code-review-graph`. O repo esta registrado como `clube3d` e o grafo foi ativado. Se alguma estatistica voltar zerada, rode `code-review-graph build --repo "<repo>" --skip-flows` e depois o pos-processamento pelo MCP.
 
 Memoria curta do projeto: leia `RESUMO_OPERACIONAL_CODEX.md` antes de retomar tarefas grandes. Ele evita reanalise cara e resume decisoes, comandos e estado atual.
 
