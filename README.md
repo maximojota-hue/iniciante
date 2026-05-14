@@ -31,6 +31,7 @@ O projeto hoje tem duas frentes:
 
 - `cluster.py` - agrupamento editorial
 - `seo_writer.py` - geracao de conteudo SEO
+- `gerar_post_web_pesquisa.py` - pesquisa paginas brasileiras e americanas, compara fontes e gera post SEO em PT-BR
 - `monetizacao.py` - blocos e estrutura de afiliados
 - `atualizar_interlinks.py` - reforco de links internos
 - `corrigir_*.py` - scripts de manutencao e ajuste editorial/SEO
@@ -38,6 +39,7 @@ O projeto hoje tem duas frentes:
 ### Skills do agente
 
 - `.agents/skills/youtube-trend-seo-post/` - fluxo antes de cada post: pesquisa tendencia no YouTube, escolhe video, usa transcricao como fonte, gera post original em PT-BR e entrega campos Yoast/WordPress.
+- `.agents/skills/web-trend-seo-post/` - fluxo antes de cada post baseado em paginas da web: compara fontes brasileiras e americanas, extrai contexto e gera post original em PT-BR com campos Yoast/WordPress.
 - `.agents/skills/yoast-seo/` - apoio para rotinas relacionadas ao Yoast SEO.
 
 ### Documentacao
@@ -84,6 +86,18 @@ Para rodar o fluxo principal por linha de comando:
 
 ```bash
 python main.py
+```
+
+Para gerar um post a partir de pesquisa web BR + US:
+
+```bash
+python gerar_post_web_pesquisa.py "filamento PLA silk" --categoria "Filamentos"
+```
+
+Para publicar o resultado como rascunho no WordPress:
+
+```bash
+python gerar_post_web_pesquisa.py "Bambu Lab A1 review" --categoria "Impressoras e Reviews" --publicar
 ```
 
 ## Estrutura pratica do projeto
