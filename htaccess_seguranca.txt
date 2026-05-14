@@ -1,0 +1,80 @@
+# ============================================================
+# Segurança clube3dbrasil.com — atualizado 2026-05-02
+# Adicione ANTES das regras "BEGIN WordPress" no .htaccess raiz
+# Faça backup do .htaccess original antes de editar
+# ============================================================
+
+# --- Proteger wp-login.php com autenticação HTTP Basic ---
+# PASSO 1: Crie o arquivo .htpasswd no cPanel:
+#   cPanel > Privacidade de Diretório > pasta wp-admin > ativar proteção
+#   (isso cria .htpasswd automaticamente no servidor)
+#   OU: cPanel > Terminal > execute:
+#   htpasswd -c /home/SEU_USUARIO_CPANEL/.htpasswd admin_login
+#   (troque SEU_USUARIO_CPANEL pelo usuário da sua conta cPanel)
+#
+# PASSO 2: Substitua /home/SEU_USUARIO_CPANEL/ pelo caminho real abaixo:
+<Files "wp-login.php">
+    AuthType Basic
+    AuthName "Área Restrita — Clube 3D Brasil"
+    AuthUserFile /home/SEU_USUARIO_CPANEL/.htpasswd
+    Require valid-user
+</Files>
+
+# --- Bloquear tentativas de login em massa (rate limiting via mod_rewrite) ---
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Bloqueia user-agents de bots de força bruta conhecidos no login
+    RewriteCond %{REQUEST_URI} ^/wp-login\.php [NC]
+    RewriteCond %{HTTP_USER_AGENT} (bot|crawl|curl|wget|python|perl|java|libwww|masscan|nikto|sqlmap) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# --- Bloquear acesso direto ao wp-admin para não-logados (exceto ajax) ---
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} ^/wp-admin/ [NC]
+    RewriteCond %{REQUEST_URI} !^/wp-admin/admin-ajax\.php [NC]
+    RewriteCond %{HTTP_COOKIE} !wordpress_logged_in [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# --- Bloquear xmlrpc.php (redundante ao snippet PHP, dupla camada) ---
+<Files "xmlrpc.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# --- Proteger wp-config.php ---
+<Files "wp-config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# --- Bloquear navegacao em diretorios ---
+Options -Indexes
+
+# --- Bloquear acesso a arquivos sensiveis ---
+<FilesMatch "\.(env|log|sql|bak|ini|sh|bash)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# --- Bloquear bad bots e scanners ---
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_USER_AGENT} (sqlmap|nikto|nessus|masscan|zgrab|libwww-perl|python-requests) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# --- Headers de seguranca HTTP (backup das regras PHP) ---
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# ============================================================
+# BEGIN WordPress — nao altere abaixo desta linha
+# ============================================================

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "yoast-seo": {
+      "source": "membranedev/application-skills",
+      "sourceType": "github",
+      "skillPath": "skills/yoast-seo/SKILL.md",
+      "computedHash": "91c267952536160d5cff8962a983b190aec0e94621a187e356cf291da082e143"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# Credenciais - nunca commitar
+.env
+.env.*
+!.env.example
+!.env.helio.example
+
+# Dados gerados localmente
+downloads/
+posts_gerados.json
+posts_publicados.json
+status.json
+rodizio_afiliados.json
+logs/
+reports/
+__pycache__/
+*.pyc
+*.exe
+dist/
+*.zip
+output/

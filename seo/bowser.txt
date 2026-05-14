@@ -1,0 +1,10 @@
+YOAST SEO — Bowser
+==================================================
+Frase-chave de foco : modelo 3D bowser
+Título SEO          : Modelo 3D Bowser — Download STL Grátis
+Slug                : bowser
+Meta descrição      : Baixe o modelo 3D de Bowser gratuitamente. Arquivo STL para impressão 3D. Perfeito para fãs de Mario.
+Tags                : Bowser, Mario, impressão 3D, modelo 3D, STL, MakerWorld, download STL, STL grátis, Bowser 3D, Mario 3D
+Imagem — Título     : Bowser STL 3D
+Imagem — Alt text   : Bowser impressão 3D
+Resumo/Excerpt      : Baixe o modelo 3D de Bowser gratuitamente. Arquivo STL para impressão 3D. Perfeito para fãs de Mario.

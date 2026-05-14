@@ -1,0 +1,32 @@
+[
+  {
+    "nome_produto": "Impressora Bambu Lab A1 Mini",
+    "link": "https://seu-link-afiliado-aqui.com/bambu-a1-mini",
+    "tipo": "impressora",
+    "imagem": ""
+  },
+  {
+    "nome_produto": "Filamento PLA Premium 1kg",
+    "link": "https://seu-link-afiliado-aqui.com/pla-premium",
+    "tipo": "filamento",
+    "imagem": ""
+  },
+  {
+    "nome_produto": "Creality Ender 3 V3",
+    "link": "https://seu-link-afiliado-aqui.com/ender3-v3",
+    "tipo": "impressora",
+    "imagem": ""
+  },
+  {
+    "nome_produto": "Filamento PETG Transparente",
+    "link": "https://seu-link-afiliado-aqui.com/petg",
+    "tipo": "filamento",
+    "imagem": ""
+  },
+  {
+    "nome_produto": "Kit Ferramentas Impressão 3D",
+    "link": "https://seu-link-afiliado-aqui.com/kit-ferramentas",
+    "tipo": "acessorio",
+    "imagem": ""
+  }
+]
