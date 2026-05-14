@@ -25,6 +25,7 @@ O projeto hoje tem duas frentes:
 - `app_helio.py` - interface separada do Helio Brinquedos
 - `painel.py` - painel auxiliar
 - `dashboard.html` - visualizacao local
+- `dashboard_30_dias.html` - dashboard editorial com roadmap dos proximos 30 dias
 
 ### Automacoes e apoio SEO
 

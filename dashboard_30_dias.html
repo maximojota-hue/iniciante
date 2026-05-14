@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clube 3D Brasil - Plano 30 Dias</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #201a16;
+      --muted: #6b6259;
+      --paper: #f5efe3;
+      --paper-strong: #fffaf0;
+      --line: #d9cbb8;
+      --orange: #ff6a13;
+      --green: #2f8f65;
+      --teal: #087d8f;
+      --yellow: #e4b02c;
+      --red: #c74336;
+      --shadow: 0 20px 50px rgba(42, 31, 22, .14);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "IBM Plex Sans Condensed", sans-serif;
+      background:
+        linear-gradient(90deg, rgba(32, 26, 22, .04) 1px, transparent 1px),
+        linear-gradient(rgba(32, 26, 22, .04) 1px, transparent 1px),
+        radial-gradient(circle at top left, rgba(255, 106, 19, .18), transparent 34rem),
+        radial-gradient(circle at 80% 10%, rgba(8, 125, 143, .14), transparent 28rem),
+        var(--paper);
+      background-size: 26px 26px, 26px 26px, auto, auto, auto;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .26;
+      background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+
+    .shell {
+      width: min(1440px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 42px;
+      aspect-ratio: 1;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      background:
+        linear-gradient(135deg, transparent 45%, rgba(255,255,255,.55) 45% 55%, transparent 55%),
+        var(--orange);
+      box-shadow: 5px 5px 0 var(--ink);
+      flex: 0 0 auto;
+    }
+
+    .brand strong {
+      display: block;
+      font-family: "Fraunces", serif;
+      font-size: clamp(22px, 3vw, 38px);
+      line-height: .92;
+      letter-spacing: -.02em;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .date-pill {
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: var(--paper-strong);
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 4px 4px 0 rgba(32, 26, 22, .18);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr);
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 20px;
+    }
+
+    .hero-main,
+    .panel,
+    .week,
+    .task,
+    .topic-card {
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      background: rgba(255, 250, 240, .86);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: clamp(24px, 5vw, 48px);
+      min-height: 320px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-main::after {
+      content: "30";
+      position: absolute;
+      right: clamp(16px, 4vw, 42px);
+      bottom: -28px;
+      color: rgba(255, 106, 19, .18);
+      font-family: "Fraunces", serif;
+      font-size: clamp(120px, 19vw, 250px);
+      font-weight: 900;
+      line-height: .8;
+      z-index: 0;
+    }
+
+    .hero-main > * { position: relative; z-index: 1; }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid var(--ink);
+      background: var(--yellow);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      max-width: 830px;
+      margin: 22px 0 16px;
+      font-family: "Fraunces", serif;
+      font-size: clamp(42px, 7vw, 94px);
+      line-height: .9;
+      letter-spacing: -.035em;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+      margin: 0;
+      color: #3f352d;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.34;
+      font-weight: 500;
+    }
+
+    .hero-side {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .metric-panel {
+      padding: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .metric-panel::before {
+      content: "";
+      position: absolute;
+      inset: auto -40px -70px auto;
+      width: 180px;
+      aspect-ratio: 1;
+      border: 18px solid rgba(8, 125, 143, .14);
+      transform: rotate(18deg);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      display: block;
+      margin: 10px 0 6px;
+      font-family: "Fraunces", serif;
+      font-size: clamp(46px, 7vw, 72px);
+      line-height: .9;
+    }
+
+    .metric-text {
+      max-width: 310px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.32;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .grid.kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 20px;
+    }
+
+    .kpi {
+      padding: 18px;
+      position: relative;
+      min-height: 148px;
+    }
+
+    .kpi strong {
+      display: block;
+      font-family: "Fraunces", serif;
+      font-size: 42px;
+      line-height: 1;
+    }
+
+    .kpi span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .kpi::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 14px;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--orange), var(--green));
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 30px 0 14px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-size: clamp(28px, 4vw, 48px);
+      letter-spacing: -.025em;
+    }
+
+    .section-title p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.3;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .weeks {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .week {
+      padding: 18px;
+      min-height: 310px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .week:hover {
+      transform: translateY(-3px);
+      box-shadow: 8px 8px 0 rgba(32, 26, 22, .16), var(--shadow);
+    }
+
+    .week-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .week-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      aspect-ratio: 1;
+      border: 2px solid var(--ink);
+      border-radius: 6px;
+      background: var(--orange);
+      color: var(--paper-strong);
+      font-family: "Fraunces", serif;
+      font-size: 24px;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: var(--muted);
+      background: rgba(255,255,255,.42);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
+    .week h3 {
+      margin: 4px 0 0;
+      font-family: "Fraunces", serif;
+      font-size: 27px;
+      line-height: .98;
+      letter-spacing: -.02em;
+    }
+
+    .week ul {
+      margin: 0;
+      padding-left: 19px;
+      color: #453b33;
+      font-size: 16px;
+      line-height: 1.36;
+      font-weight: 600;
+    }
+
+    .week li + li { margin-top: 8px; }
+
+    .board {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      letter-spacing: -.02em;
+    }
+
+    .panel h2 { font-size: 34px; }
+    .panel h3 { font-size: 26px; }
+
+    .task-list {
+      display: grid;
+      gap: 11px;
+      margin-top: 16px;
+    }
+
+    .task {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      padding: 13px;
+      box-shadow: none;
+      background: rgba(255,255,255,.48);
+    }
+
+    .task input {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--green);
+      margin-top: 2px;
+    }
+
+    .task strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.16;
+    }
+
+    .task small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .task .day {
+      min-width: 58px;
+      border-left: 2px solid var(--line);
+      padding-left: 10px;
+      color: var(--teal);
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .task.done {
+      background: rgba(47, 143, 101, .1);
+    }
+
+    .task.done strong,
+    .task.done small {
+      text-decoration: line-through;
+      color: #7b746c;
+    }
+
+    .progress-wrap {
+      margin-top: 14px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.55);
+      height: 24px;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--green));
+      transition: width .3s ease;
+    }
+
+    .progress-note {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .pipeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .pipe-step {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pipe-step:last-child { border-bottom: 0; }
+
+    .pipe-num {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      aspect-ratio: 1;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--paper-strong);
+      font-weight: 900;
+    }
+
+    .pipe-step strong {
+      display: block;
+      font-size: 18px;
+    }
+
+    .pipe-step span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      line-height: 1.28;
+      font-weight: 600;
+    }
+
+    .topics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .topic-card {
+      padding: 17px;
+      box-shadow: none;
+      min-height: 178px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .topic-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      background: var(--accent, var(--orange));
+    }
+
+    .topic-card h3 {
+      margin: 8px 0 10px;
+      font-family: "Fraunces", serif;
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .topic-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+
+    .topic-card strong {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--ink);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .day-card {
+      min-height: 112px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      background: rgba(255,255,255,.44);
+    }
+
+    .day-card b {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--paper-strong);
+      font-size: 12px;
+    }
+
+    .day-card span {
+      display: block;
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.22;
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin: 24px 0 0;
+      padding: 18px 20px;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: var(--paper-strong);
+      font-size: 18px;
+      line-height: 1.32;
+      font-weight: 600;
+    }
+
+    .footer-note code {
+      color: #ffd78a;
+      font-family: inherit;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1120px) {
+      .hero,
+      .board {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-side {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+
+      .grid.kpis,
+      .weeks,
+      .topics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .calendar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 20px, 1440px);
+        padding-top: 12px;
+      }
+
+      .topbar,
+      .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .date-pill {
+        white-space: normal;
+      }
+
+      .hero-side,
+      .grid.kpis,
+      .weeks,
+      .topics,
+      .calendar {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-main {
+        min-height: 360px;
+      }
+
+      .section-title p {
+        text-align: left;
+      }
+
+      .task {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .task .day {
+        grid-column: 2;
+        border-left: 0;
+        padding-left: 0;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div>
+          <strong>Clube 3D Brasil</strong>
+          <span>Roadmap editorial de 30 dias</span>
+        </div>
+      </div>
+      <div class="date-pill" id="todayLabel">Plano ativo</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-main">
+        <span class="eyebrow">prioridade agora</span>
+        <h1>Ganhar tracao com posts que nascem de tendencia.</h1>
+        <p class="hero-copy">Todo novo artigo passa por YouTube, transcricao, reescrita original, Yoast e interlinks. O objetivo dos proximos 30 dias e aumentar a base de busca organica sem perder velocidade.</p>
+      </div>
+
+      <aside class="hero-side">
+        <div class="panel metric-panel">
+          <span class="metric-label">meta editorial</span>
+          <strong class="metric-value">30</strong>
+          <p class="metric-text">dias com cadencia clara: pesquisar, escrever, publicar, medir e ajustar.</p>
+        </div>
+        <div class="panel metric-panel">
+          <span class="metric-label">regra de qualidade</span>
+          <strong class="metric-value">1 video</strong>
+          <p class="metric-text">forte por post, usando transcricao como fonte e nao como copia.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="grid kpis" aria-label="Indicadores principais">
+      <div class="panel kpi">
+        <strong>24</strong>
+        <span>posts recomendados no ciclo, com folga para revisao.</span>
+      </div>
+      <div class="panel kpi">
+        <strong>7</strong>
+        <span>clusters editoriais vivos para reforcar autoridade.</span>
+      </div>
+      <div class="panel kpi">
+        <strong>6</strong>
+        <span>posts STL/geek para pico visual e compartilhamento.</span>
+      </div>
+      <div class="panel kpi">
+        <strong>100%</strong>
+        <span>dos posts com Yoast, FAQ, interlinks e briefing de imagem.</span>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Plano por semana</h2>
+        <p>Use as semanas como foco editorial. Cada post deve passar pela skill `youtube-trend-seo-post` antes de virar rascunho no WordPress.</p>
+      </div>
+
+      <div class="weeks">
+        <article class="week">
+          <div class="week-head">
+            <span class="week-num">1</span>
+            <span class="tag">fundacao</span>
+          </div>
+          <h3>Iniciantes e autoridade basica</h3>
+          <ul>
+            <li>Publicar 5 posts de entrada: primeira impressora, erros comuns, primeira camada, slicer, manutencao.</li>
+            <li>Atualizar hubs de Iniciantes e Filamentos com links internos.</li>
+            <li>Definir modelo padrao de briefing para imagens e afiliados.</li>
+          </ul>
+        </article>
+
+        <article class="week">
+          <div class="week-head">
+            <span class="week-num">2</span>
+            <span class="tag">evergreen</span>
+          </div>
+          <h3>Filamentos e problemas praticos</h3>
+          <ul>
+            <li>Publicar 6 posts sobre PLA, PETG, TPU, ABS/ASA, umidade e bicos.</li>
+            <li>Criar comparativos com tabelas simples e recomendacoes verificaveis.</li>
+            <li>Inserir slots de afiliado por tipo de material, sem link inventado.</li>
+          </ul>
+        </article>
+
+        <article class="week">
+          <div class="week-head">
+            <span class="week-num">3</span>
+            <span class="tag">alcance</span>
+          </div>
+          <h3>STL geek e tendencias visuais</h3>
+          <ul>
+            <li>Publicar 6 posts de modelos/personagens com apelo de busca e imagem.</li>
+            <li>Priorizar temas com video recente e alto engajamento.</li>
+            <li>Conectar cada post ao hub STL e a guias de acabamento/pintura.</li>
+          </ul>
+        </article>
+
+        <article class="week">
+          <div class="week-head">
+            <span class="week-num">4</span>
+            <span class="tag">conversao</span>
+          </div>
+          <h3>Reviews, dinheiro e consolidacao</h3>
+          <ul>
+            <li>Publicar 4 reviews/guias de compra e 3 posts de monetizacao.</li>
+            <li>Revisar titulos, metas, categorias e interlinks dos 30 dias.</li>
+            <li>Separar lista final de afiliados e imagens para entrar no fluxo seguinte.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="board">
+      <div>
+        <div class="section-title">
+          <h2>Checklist operacional</h2>
+          <p>Marque conforme executar. O progresso fica salvo neste navegador.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Passos dos proximos 30 dias</h2>
+          <div class="progress-wrap" aria-label="Progresso do checklist">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <p class="progress-note" id="progressNote">0 de 12 passos concluidos</p>
+
+          <div class="task-list" id="taskList">
+            <label class="task">
+              <input type="checkbox" data-task="1">
+              <span><strong>Fechar lista dos 24 temas</strong><small>Dividir por cluster antes de pesquisar videos.</small></span>
+              <span class="day">D1</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="2">
+              <span><strong>Rodar a skill YouTube Trend SEO em cada tema</strong><small>Escolher video principal, score e angulo do post.</small></span>
+              <span class="day">D1-D30</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="3">
+              <span><strong>Gerar rascunhos no WordPress</strong><small>Usar status draft ate revisar imagem e afiliados.</small></span>
+              <span class="day">D2+</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="4">
+              <span><strong>Validar Yoast em todos os posts</strong><small>Keyphrase, titulo SEO, meta, slug e legibilidade.</small></span>
+              <span class="day">semanal</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="5">
+              <span><strong>Adicionar FAQ e schema quando fizer sentido</strong><small>Principalmente iniciantes, filamentos e reviews.</small></span>
+              <span class="day">semanal</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="6">
+              <span><strong>Reforcar links internos</strong><small>Cada post aponta para um hub e 2 posts relacionados.</small></span>
+              <span class="day">semanal</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="7">
+              <span><strong>Separar imagens por post</strong><small>Definir imagem destacada, alt text e briefing visual.</small></span>
+              <span class="day">D5+</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="8">
+              <span><strong>Mapear slots de afiliado</strong><small>Produto por intencao: filamento, impressora, bico, mesa, ferramenta.</small></span>
+              <span class="day">D7+</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="9">
+              <span><strong>Publicar com cadencia</strong><small>Ideal: 5 a 6 posts por semana, sem sacrificar revisao.</small></span>
+              <span class="day">D2-D30</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="10">
+              <span><strong>Atualizar hubs principais</strong><small>Iniciantes, Filamentos, STL, Reviews e Monetizacao.</small></span>
+              <span class="day">D14/D28</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="11">
+              <span><strong>Medir indexacao e cliques</strong><small>Search Console: paginas novas, consultas e CTR.</small></span>
+              <span class="day">D15+</span>
+            </label>
+            <label class="task">
+              <input type="checkbox" data-task="12">
+              <span><strong>Preparar proximo ciclo</strong><small>Replicar temas com sinais fortes e cortar temas fracos.</small></span>
+              <span class="day">D30</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="section-title">
+          <h2>Fluxo antes do post</h2>
+        </div>
+        <div class="panel">
+          <h3>Skill obrigatoria</h3>
+          <div class="pipeline">
+            <div class="pipe-step"><span class="pipe-num">1</span><span><strong>Pesquisar tendencia</strong><span>Buscar videos recentes no YouTube e medir relevancia, engajamento e utilidade.</span></span></div>
+            <div class="pipe-step"><span class="pipe-num">2</span><span><strong>Escolher video</strong><span>Selecionar uma fonte principal com score minimo de 60/100.</span></span></div>
+            <div class="pipe-step"><span class="pipe-num">3</span><span><strong>Extrair transcricao</strong><span>Usar legenda/transcricao como insumo, sem copiar texto do video.</span></span></div>
+            <div class="pipe-step"><span class="pipe-num">4</span><span><strong>Gerar artigo original</strong><span>Adicionar contexto brasileiro, exemplos, FAQ, tabela e links internos.</span></span></div>
+            <div class="pipe-step"><span class="pipe-num">5</span><span><strong>Preencher Yoast</strong><span>Keyphrase, SEO title, meta description, slug, tags e categoria.</span></span></div>
+            <div class="pipe-step"><span class="pipe-num">6</span><span><strong>Deixar slots prontos</strong><span>Marcar oportunidades para imagens e afiliados sem inventar links.</span></span></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Mix editorial</h2>
+        <p>Distribuicao sugerida para equilibrar trafego, autoridade e monetizacao.</p>
+      </div>
+
+      <div class="topics">
+        <article class="topic-card" style="--accent: var(--green)">
+          <h3>Iniciantes</h3>
+          <p>5 posts para capturar novos makers e construir confianca.</p>
+          <strong>porta de entrada</strong>
+        </article>
+        <article class="topic-card" style="--accent: var(--teal)">
+          <h3>Filamentos</h3>
+          <p>6 posts evergreen com intencao de compra e busca constante.</p>
+          <strong>trafego estavel</strong>
+        </article>
+        <article class="topic-card" style="--accent: var(--orange)">
+          <h3>STL Geek</h3>
+          <p>6 posts visuais para cliques, compartilhamento e descoberta.</p>
+          <strong>alcance</strong>
+        </article>
+        <article class="topic-card" style="--accent: var(--yellow)">
+          <h3>Reviews</h3>
+          <p>4 posts para comparativos, compra e autoridade pratica.</p>
+          <strong>conversao</strong>
+        </article>
+        <article class="topic-card" style="--accent: var(--red)">
+          <h3>Ganhar dinheiro</h3>
+          <p>3 posts com alto valor comercial e ideias de servicos/produtos.</p>
+          <strong>monetizacao</strong>
+        </article>
+        <article class="topic-card" style="--accent: #7a5c35">
+          <h3>Modelagem</h3>
+          <p>2 posts para reforcar profundidade tecnica e interlinks.</p>
+          <strong>autoridade</strong>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Calendario sugerido</h2>
+        <p>Um roteiro simples de publicacao. Ajuste a ordem quando uma tendencia forte aparecer no YouTube.</p>
+      </div>
+
+      <div class="panel">
+        <div class="calendar">
+          <div class="day-card"><b>1</b><span>Checklist + lista de temas</span></div>
+          <div class="day-card"><b>2</b><span>Primeira impressora 3D</span></div>
+          <div class="day-card"><b>3</b><span>Erros de iniciante</span></div>
+          <div class="day-card"><b>4</b><span>Primeira camada perfeita</span></div>
+          <div class="day-card"><b>5</b><span>Slicer para comecar</span></div>
+          <div class="day-card"><b>6</b><span>Manutencao basica</span></div>
+          <div class="day-card"><b>7</b><span>Revisao semanal</span></div>
+          <div class="day-card"><b>8</b><span>PLA: guia pratico</span></div>
+          <div class="day-card"><b>9</b><span>PETG: quando usar</span></div>
+          <div class="day-card"><b>10</b><span>TPU sem sofrimento</span></div>
+          <div class="day-card"><b>11</b><span>ABS/ASA no Brasil</span></div>
+          <div class="day-card"><b>12</b><span>Filamento umido</span></div>
+          <div class="day-card"><b>13</b><span>Bico 0.4 vs 0.6</span></div>
+          <div class="day-card"><b>14</b><span>Atualizar hubs</span></div>
+          <div class="day-card"><b>15</b><span>STL personagem trend</span></div>
+          <div class="day-card"><b>16</b><span>Miniaturas articuladas</span></div>
+          <div class="day-card"><b>17</b><span>Cosplay maker</span></div>
+          <div class="day-card"><b>18</b><span>Acabamento e pintura</span></div>
+          <div class="day-card"><b>19</b><span>Games/personagens</span></div>
+          <div class="day-card"><b>20</b><span>STL para vender</span></div>
+          <div class="day-card"><b>21</b><span>Revisao semanal</span></div>
+          <div class="day-card"><b>22</b><span>Review impressora entrada</span></div>
+          <div class="day-card"><b>23</b><span>Bambu/Creality comparativo</span></div>
+          <div class="day-card"><b>24</b><span>Upgrade que vale a pena</span></div>
+          <div class="day-card"><b>25</b><span>Qual impressora comprar</span></div>
+          <div class="day-card"><b>26</b><span>Vender chaveiros 3D</span></div>
+          <div class="day-card"><b>27</b><span>Precificar pecas 3D</span></div>
+          <div class="day-card"><b>28</b><span>Servicos locais 3D</span></div>
+          <div class="day-card"><b>29</b><span>Revisao de SEO</span></div>
+          <div class="day-card"><b>30</b><span>Plano do proximo mes</span></div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">Comando mental do ciclo: antes de cada post, usar <code>youtube-trend-seo-post</code>, publicar como rascunho, revisar Yoast, adicionar imagem/afiliado e so entao agendar.</p>
+  </main>
+
+  <script>
+    const today = new Date();
+    const formatter = new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+    document.getElementById("todayLabel").textContent = `Atualizado em ${formatter.format(today)}`;
+
+    const storageKey = "clube3d-roadmap-30dias";
+    const checks = Array.from(document.querySelectorAll("[data-task]"));
+    const progressBar = document.getElementById("progressBar");
+    const progressNote = document.getElementById("progressNote");
+
+    function readState() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function writeState(state) {
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    function updateProgress() {
+      const done = checks.filter((item) => item.checked).length;
+      const pct = Math.round((done / checks.length) * 100);
+      progressBar.style.width = `${pct}%`;
+      progressNote.textContent = `${done} de ${checks.length} passos concluidos (${pct}%)`;
+
+      checks.forEach((item) => {
+        item.closest(".task").classList.toggle("done", item.checked);
+      });
+    }
+
+    const state = readState();
+    checks.forEach((item) => {
+      item.checked = Boolean(state[item.dataset.task]);
+      item.addEventListener("change", () => {
+        const current = readState();
+        current[item.dataset.task] = item.checked;
+        writeState(current);
+        updateProgress();
+      });
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>
