@@ -261,7 +261,10 @@ class WordPressPublisher:
         nome_modelo = titulo.replace("Modelo 3D ", "").replace(" — Download STL Grátis", "").strip()
         base_seo = keyphrase or nome_modelo
         for i, caminho in enumerate(imagens_locais[:2]):
-            if i == 0:
+            if "downloads/afiliados/" in caminho.replace("\\", "/"):
+                alt   = f"{nome_modelo} produto indicado para impressao 3D"
+                title = f"{base_seo} produto indicado"
+            elif i == 0:
                 alt   = f"{nome_modelo} STL para impressão 3D — arquivo 3D grátis"
                 title = base_seo
             else:

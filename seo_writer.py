@@ -865,14 +865,27 @@ def _build_user_prompt(
 {{"titulo": "Titulo ate 65 chars com keyword no inicio", "seo_title": "Titulo SEO 55-65 chars", "meta_description": "Meta ate 155 chars com keyword", "slug": "keyword-em-kebab-case", "tags": ["impressao 3d", "outra-tag"], "categoria": {renda_extra_categoria}, "post_content": "<p>Introducao com <strong>{keyword}</strong>...</p><h2><strong>H2 com keyword</strong></h2>..."}}"""
 
 
-def _html_bloco_afiliado(af: dict) -> str:
+def _html_bloco_afiliado(af: dict, incluir_imagem: bool = False) -> str:
     nome = af.get("nome") or af.get("nome_produto", "")
     link = af.get("link", "")
+    imagem = af.get("imagem") or af.get("image") or af.get("image_path") or ""
+    imagem_html = ""
+    if incluir_imagem and imagem:
+        alt = f"{nome} para impressao 3D".replace('"', "&quot;")
+        imagem_html = (
+            f'<a href="{link}" target="_blank" rel="noopener noreferrer sponsored" '
+            'style="display:block;text-decoration:none;margin:4px auto 12px auto;max-width:360px;">'
+            f'<img src="{imagem}" alt="{alt}" loading="lazy" '
+            'style="display:block;width:100%;max-width:360px;height:auto;margin:0 auto;'
+            'border-radius:6px;border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 28px rgba(0,0,0,.24);"/>'
+            '</a>'
+        )
     return (
         '\n<div style="border:2px solid #e07b00;background:#1a0e00;'
         'padding:14px 18px;margin:28px 0;border-radius:6px;font-family:inherit;">'
         '<p style="margin:0 0 6px 0;font-size:0.75em;font-weight:700;color:#e07b00;'
         'text-transform:uppercase;letter-spacing:0.08em;">&#9733; Produto Indicado</p>'
+        f'{imagem_html}'
         f'<a href="{link}" target="_blank" rel="noopener noreferrer sponsored" '
         f'style="display:block;color:#ffffff;font-size:1.05em;font-weight:600;'
         f'text-decoration:none;line-height:1.4;">{nome} &#8594;</a>'
@@ -892,7 +905,7 @@ def _injetar_blocos_afiliados(content: str, afiliados: list) -> str:
         return content
 
     n = len(afiliados)
-    bloco_topo  = _html_bloco_afiliado(afiliados[0])
+    bloco_topo  = _html_bloco_afiliado(afiliados[0], incluir_imagem=True)
     bloco_meio  = _html_bloco_afiliado(afiliados[n // 2])
     bloco_final = _html_bloco_afiliado(afiliados[-1])
 

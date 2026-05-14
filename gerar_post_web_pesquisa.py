@@ -14,6 +14,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import sys
 import time
 from dataclasses import asdict, dataclass
@@ -292,6 +293,18 @@ def keyword_para_secundarias(keyword: str) -> list[str]:
     ]
 
 
+def copiar_imagem_afiliado(caminho: str, nome_produto: str) -> str:
+    origem = Path(caminho)
+    if not caminho or not origem.exists():
+        return ""
+    slug = re.sub(r"[^a-z0-9]+", "-", nome_produto.lower()).strip("-") or "produto-afiliado"
+    destino_dir = Path("downloads") / "afiliados"
+    destino_dir.mkdir(parents=True, exist_ok=True)
+    destino = destino_dir / f"{slug}{origem.suffix.lower() or '.jpg'}"
+    shutil.copy2(origem, destino)
+    return str(destino)
+
+
 def gerar_post_por_pesquisa_web(
     tema: str,
     categoria: str,
@@ -299,6 +312,7 @@ def gerar_post_por_pesquisa_web(
     publicar: bool = False,
     affiliate_url: str = "",
     affiliate_name: str = "",
+    affiliate_image_path: str = "",
     featured_image_path: str = "",
     source_urls: list[str] | None = None,
 ) -> dict:
@@ -319,10 +333,12 @@ def gerar_post_por_pesquisa_web(
     page_title, page_content = montar_contexto_comparativo(tema, fontes)
     afiliados_override = None
     if affiliate_url:
+        imagem_afiliado = copiar_imagem_afiliado(affiliate_image_path, affiliate_name or tema)
         afiliados_override = [{
             "nome": affiliate_name or tema,
             "tipo": "impressora",
             "link": affiliate_url,
+            "imagem": imagem_afiliado,
         }]
 
     post = seo_writer.gerar_post_web(
@@ -375,6 +391,7 @@ def main() -> None:
     parser.add_argument("--publicar", action="store_true", help="Publica como rascunho no WordPress.")
     parser.add_argument("--affiliate-url", default="", help="Link de afiliado para inserir no post.")
     parser.add_argument("--affiliate-name", default="", help="Nome do produto afiliado.")
+    parser.add_argument("--affiliate-image", default="", help="Foto do produto afiliado para aparecer no texto.")
     parser.add_argument("--featured-image", default="", help="Caminho da imagem principal do post.")
     parser.add_argument("--source-url", action="append", default=[], help="URL fonte manual. Pode repetir.")
     args = parser.parse_args()
@@ -390,6 +407,7 @@ def main() -> None:
         publicar=args.publicar,
         affiliate_url=args.affiliate_url,
         affiliate_name=args.affiliate_name,
+        affiliate_image_path=args.affiliate_image,
         featured_image_path=args.featured_image,
         source_urls=args.source_url,
     )
