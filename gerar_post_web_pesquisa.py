@@ -231,6 +231,25 @@ def pesquisar_fontes(tema: str, por_mercado: int = 4, log_fn=print) -> list[dict
     return selecionadas
 
 
+def carregar_fontes_manuais(urls: list[str], tema: str, log_fn=print) -> list[dict]:
+    fontes = []
+    for url in urls:
+        mercado = "br" if ".br" in dominio(url) or "/pt" in url.lower() else "us"
+        item = ResultadoBusca(mercado=mercado, titulo=url, url=url, snippet="")
+        extraido = seo_writer.extrair_conteudo_web(url, log_fn=log_fn)
+        conteudo = extraido.get("conteudo", "")
+        item.conteudo_chars = len(conteudo)
+        item.score = pontuar_resultado(item, tema, conteudo)
+        fontes.append({
+            **asdict(item),
+            "titulo_extraido": extraido.get("titulo", ""),
+            "descricao": extraido.get("descricao", ""),
+            "conteudo": conteudo,
+        })
+    fontes.sort(key=lambda f: (f["mercado"], -f["score"]))
+    return fontes
+
+
 def montar_contexto_comparativo(tema: str, fontes: list[dict]) -> tuple[str, str]:
     br = [f for f in fontes if f["mercado"] == "br"]
     us = [f for f in fontes if f["mercado"] == "us"]
@@ -278,12 +297,18 @@ def gerar_post_por_pesquisa_web(
     categoria: str,
     por_mercado: int = 3,
     publicar: bool = False,
+    affiliate_url: str = "",
+    affiliate_name: str = "",
+    featured_image_path: str = "",
+    source_urls: list[str] | None = None,
 ) -> dict:
     print("\n" + "=" * 70)
     print(f"Pesquisa web comparativa: {tema}")
     print("=" * 70)
 
-    fontes = pesquisar_fontes(tema, por_mercado=por_mercado, log_fn=print)
+    fontes = carregar_fontes_manuais(source_urls, tema, log_fn=print) if source_urls else []
+    if not fontes:
+        fontes = pesquisar_fontes(tema, por_mercado=por_mercado, log_fn=print)
     if not fontes:
         raise RuntimeError("Nenhuma fonte web util encontrada para o tema.")
 
@@ -292,6 +317,14 @@ def gerar_post_por_pesquisa_web(
         print(f"  [{fonte['mercado'].upper()}] {fonte['score']:>3} | {fonte['titulo'][:72]} | {fonte['url']}")
 
     page_title, page_content = montar_contexto_comparativo(tema, fontes)
+    afiliados_override = None
+    if affiliate_url:
+        afiliados_override = [{
+            "nome": affiliate_name or tema,
+            "tipo": "impressora",
+            "link": affiliate_url,
+        }]
+
     post = seo_writer.gerar_post_web(
         keyword=tema,
         secondary_kws=keyword_para_secundarias(tema),
@@ -299,8 +332,12 @@ def gerar_post_por_pesquisa_web(
         page_title=page_title,
         page_content=page_content,
         categoria=categoria,
+        afiliados_override=afiliados_override,
         log_fn=print,
     )
+    if featured_image_path:
+        post["featured_image_path"] = featured_image_path
+
     post["origem"] = "pesquisa_web_br_us"
     post["fontes_pesquisa"] = [
         {
@@ -336,6 +373,10 @@ def main() -> None:
     parser.add_argument("--categoria", default="Impressao 3D", help="Categoria WordPress/SEO.")
     parser.add_argument("--por-mercado", type=int, default=3, help="Fontes por mercado BR/US.")
     parser.add_argument("--publicar", action="store_true", help="Publica como rascunho no WordPress.")
+    parser.add_argument("--affiliate-url", default="", help="Link de afiliado para inserir no post.")
+    parser.add_argument("--affiliate-name", default="", help="Nome do produto afiliado.")
+    parser.add_argument("--featured-image", default="", help="Caminho da imagem principal do post.")
+    parser.add_argument("--source-url", action="append", default=[], help="URL fonte manual. Pode repetir.")
     args = parser.parse_args()
 
     tema = args.tema or input("Tema/keyword do post: ").strip()
@@ -347,6 +388,10 @@ def main() -> None:
         categoria=args.categoria,
         por_mercado=max(1, min(args.por_mercado, 5)),
         publicar=args.publicar,
+        affiliate_url=args.affiliate_url,
+        affiliate_name=args.affiliate_name,
+        featured_image_path=args.featured_image,
+        source_urls=args.source_url,
     )
 
 

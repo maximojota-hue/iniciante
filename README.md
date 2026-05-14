@@ -103,6 +103,18 @@ Para publicar o resultado como rascunho no WordPress:
 python gerar_post_web_pesquisa.py "Bambu Lab A1 review" --categoria "Impressoras e Reviews" --publicar
 ```
 
+O fluxo web tambem aceita fontes manuais, link afiliado e imagem principal:
+
+```bash
+python gerar_post_web_pesquisa.py "Bambu Lab A1 Mini vale a pena" --categoria "Impressoras e Reviews" --source-url "https://exemplo.com/review" --affiliate-url "https://link-afiliado" --affiliate-name "Bambu Lab A1 Mini" --featured-image "downloads/capas/capa.jpg" --publicar
+```
+
+Para criar uma capa 16:9 a partir de uma arte de produto:
+
+```bash
+python criar_capa_afiliado.py --input "foto-produto.png" --output "downloads/capas/capa.jpg" --headline "Bambu Lab A1 Mini"
+```
+
 Para rodar a auditoria SEO local do Clube 3D:
 
 ```bash

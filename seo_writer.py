@@ -20,6 +20,7 @@ def _get_api_key() -> str:
         env_path = Path(".env")
         if env_path.exists():
             for line in env_path.read_text(encoding="utf-8").splitlines():
+                line = line.lstrip("\ufeff")
                 if line.startswith("ANTHROPIC_API_KEY="):
                     key = line.split("=", 1)[1].strip()
                     break
@@ -464,7 +465,9 @@ def gerar_post_web(
     post_content = data.get("post_content", "")
     post_content += _gerar_faq_schema_do_content(post_content)
     post_content = _injetar_blocos_afiliados(post_content, afiliados_para_post)
-    post_content = _injetar_download_antes_faq(post_content, page_url, page_title)
+    contexto_download = f"{keyword} {categoria} {page_title}".lower()
+    if any(term in contexto_download for term in ("stl", "download", "modelo", "personagem")):
+        post_content = _injetar_download_antes_faq(post_content, page_url, page_title)
     post_content += _bloco_bridge_renda_extra()
 
     post = {
