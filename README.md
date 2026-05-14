@@ -34,6 +34,11 @@ O projeto hoje tem duas frentes:
 - `atualizar_interlinks.py` - reforco de links internos
 - `corrigir_*.py` - scripts de manutencao e ajuste editorial/SEO
 
+### Skills do agente
+
+- `.agents/skills/youtube-trend-seo-post/` - fluxo antes de cada post: pesquisa tendencia no YouTube, escolhe video, usa transcricao como fonte, gera post original em PT-BR e entrega campos Yoast/WordPress.
+- `.agents/skills/yoast-seo/` - apoio para rotinas relacionadas ao Yoast SEO.
+
 ### Documentacao
 
 - `LEIAME.md` - guia operacional detalhado
@@ -110,4 +115,3 @@ python main.py
 - saida gerada nao entra no fluxo de trabalho normal
 - segredo fica fora do repo publico
 - qualquer ajuste de SEO ou publicacao deve passar primeiro pelo pipeline principal
-
