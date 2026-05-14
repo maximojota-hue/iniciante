@@ -35,6 +35,7 @@ O projeto hoje tem duas frentes:
 - `seo_writer.py` - geracao de conteudo SEO
 - `auditoria_seo_clube3d.py` - auditoria SEO local inspirada no codex-seo para tecnico, sitemap, schema, imagens, conteudo e AI readiness
 - `gerar_post_web_pesquisa.py` - pesquisa paginas brasileiras e americanas, compara fontes e gera post SEO em PT-BR
+- `pinterest_automacao.py` - gera artes verticais para Pinterest, lista/cria boards e publica Pins via API oficial
 - `monetizacao.py` - blocos e estrutura de afiliados
 - `atualizar_interlinks.py` - reforco de links internos
 - `corrigir_*.py` - scripts de manutencao e ajuste editorial/SEO
@@ -113,6 +114,21 @@ Para criar uma capa 16:9 a partir de uma arte de produto:
 
 ```bash
 python criar_capa_afiliado.py --input "foto-produto.png" --output "downloads/capas/capa.jpg" --headline "Bambu Lab A1 Mini"
+```
+
+Para gerar um pacote Pinterest de 5 Pins:
+
+```bash
+python pinterest_automacao.py generate --title "Bambu Lab A1 Mini vale a pena?" --url "https://clube3dbrasil.com/?p=2991" --image "downloads/capas/bambu-lab-a1-mini-vale-a-pena-2026.jpg"
+```
+
+Para conectar a API do Pinterest:
+
+```bash
+python pinterest_automacao.py save-token
+python pinterest_automacao.py boards
+python pinterest_automacao.py create-board "Impressao 3D para Iniciantes"
+python pinterest_automacao.py publish --manifest "output/pinterest/bambu-lab-a1-mini-vale-a-pena/pins.json" --board-id "ID_DA_BOARD"
 ```
 
 Para rodar a auditoria SEO local do Clube 3D:
