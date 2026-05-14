@@ -1,0 +1,26 @@
+{
+  "name": "clube3d-automacao-codex",
+  "version": "1.0.0",
+  "description": "Repositorio de automacao para publicar conteudo no WordPress e organizar a operacao editorial do nicho de impressao 3D.",
+  "main": "index.js",
+  "scripts": {
+    "pw:version": "playwright --version",
+    "pw:codegen": "playwright codegen",
+    "pw:screenshot-dashboard": "playwright screenshot dashboard_30_dias.html output/playwright/dashboard_30_dias.png"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximojota-hue/iniciante.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/maximojota-hue/iniciante/issues"
+  },
+  "homepage": "https://github.com/maximojota-hue/iniciante#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
