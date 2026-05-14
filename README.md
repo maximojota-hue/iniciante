@@ -31,6 +31,7 @@ O projeto hoje tem duas frentes:
 
 - `cluster.py` - agrupamento editorial
 - `seo_writer.py` - geracao de conteudo SEO
+- `auditoria_seo_clube3d.py` - auditoria SEO local inspirada no codex-seo para tecnico, sitemap, schema, imagens, conteudo e AI readiness
 - `gerar_post_web_pesquisa.py` - pesquisa paginas brasileiras e americanas, compara fontes e gera post SEO em PT-BR
 - `monetizacao.py` - blocos e estrutura de afiliados
 - `atualizar_interlinks.py` - reforco de links internos
@@ -98,6 +99,18 @@ Para publicar o resultado como rascunho no WordPress:
 
 ```bash
 python gerar_post_web_pesquisa.py "Bambu Lab A1 review" --categoria "Impressoras e Reviews" --publicar
+```
+
+Para rodar a auditoria SEO local do Clube 3D:
+
+```bash
+python auditoria_seo_clube3d.py https://clube3dbrasil.com --limit 30
+```
+
+Para salvar uma linha de base e comparar mudancas futuras:
+
+```bash
+python auditoria_seo_clube3d.py https://clube3dbrasil.com --limit 30 --baseline
 ```
 
 ## Estrutura pratica do projeto
