@@ -2,6 +2,8 @@
 
 Repositorio de automacao para publicar conteudo no WordPress e organizar a operacao editorial do nicho de impressao 3D.
 
+Para retomar o projeto rapidamente e economizar contexto, leia primeiro `RESUMO_OPERACIONAL_CODEX.md`.
+
 O projeto hoje tem duas frentes:
 
 1. `Clube 3D Brasil` - pipeline principal de coleta, geracao e publicacao.
