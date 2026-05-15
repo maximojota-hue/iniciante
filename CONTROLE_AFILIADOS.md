@@ -31,6 +31,8 @@ Ou autorizar:
 criar sem afiliado
 ```
 
+Cada post pode usar no maximo 3 afiliados.
+
 ## Lista
 
 | # | Nome curto | Link afiliado | Foto | Status | Observacoes |
@@ -44,6 +46,8 @@ Antes de criar qualquer post, o Codex deve:
 1. Dizer claramente sobre o que sera o post.
 2. Perguntar se deve usar um afiliado cadastrado pelo numero.
 3. Aceitar cadastro de um novo afiliado com nome curto, link e foto.
-4. Aceitar a opcao `criar sem afiliado`.
+4. Perguntar se o usuario quer selecionar/enviar mais 1 afiliado antes de criar o post.
+5. Respeitar o limite maximo de 3 afiliados por post.
+6. Aceitar a opcao `criar sem afiliado`.
 
 Depois de usar um afiliado em post, registrar o numero dele tambem em `CONTROLE_POSTS.md`.

@@ -17,33 +17,39 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 1. No app principal, abra a aba `Post Web`.
 2. Defina o tema do post com foco em busca brasileira, por exemplo `melhor filamento PLA para iniciantes`.
 3. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
-4. Se nao houver produto afiliado para o tema, registre que o rascunho sera feito sem afiliado.
-5. Use a pesquisa web BR + US quando quiser comparar paginas brasileiras e americanas.
-6. Carregue a planilha de afiliados se o artigo tiver produto.
-7. Selecione as fotos correspondentes aos produtos.
-8. Gere o post SEO.
-9. Publique como `draft` para revisar no WordPress.
-10. Revise titulo, slug, meta description, imagem destacada, links internos, bloco afiliado e Yoast.
-11. Publique quando estiver pronto.
+4. Confirme se vai usar apenas esse afiliado ou se deseja adicionar/selecionar mais 1.
+5. Use no maximo 3 afiliados por post.
+6. Se nao houver produto afiliado para o tema, registre que o rascunho sera feito sem afiliado.
+7. Use a pesquisa web BR + US quando quiser comparar paginas brasileiras e americanas.
+8. Carregue a planilha de afiliados se o artigo tiver produto.
+9. Selecione as fotos correspondentes aos produtos.
+10. Gere o post SEO.
+11. Publique como `draft` para revisar no WordPress.
+12. Revise titulo, slug, meta description, imagem destacada, links internos, bloco afiliado e Yoast.
+13. Publique quando estiver pronto.
 
 ## Para criar post baseado em YouTube
 
 1. No app principal, abra a aba `YouTube`.
 2. Cole a URL do video escolhido.
 3. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
-4. Se nao houver afiliado para o tema, confirme que o rascunho sera feito sem afiliado.
-5. Selecione a categoria correta.
-6. Gere o post automatico.
-7. Revise o rascunho no WordPress antes de publicar.
+4. Confirme se vai usar apenas esse afiliado ou se deseja adicionar/selecionar mais 1.
+5. Use no maximo 3 afiliados por post.
+6. Se nao houver afiliado para o tema, confirme que o rascunho sera feito sem afiliado.
+7. Selecione a categoria correta.
+8. Gere o post automatico.
+9. Revise o rascunho no WordPress antes de publicar.
 
 ## Quando houver produto afiliado
 
 1. Confirme o link afiliado e a foto correspondente antes de gerar o post.
-2. Use imagem do produto dentro do texto.
-3. Coloque link afiliado na imagem abrindo em nova aba.
-4. Redimensione a imagem para nao quebrar a estetica do artigo.
-5. Inclua um CTA claro, sem parecer propaganda agressiva.
-6. Crie interlinks para posts relacionados do Clube 3D Brasil.
+2. Pergunte se sera usado mais 1 afiliado antes de escrever.
+3. Use no maximo 3 afiliados por post.
+4. Use imagem do produto dentro do texto.
+5. Coloque link afiliado na imagem abrindo em nova aba.
+6. Redimensione a imagem para nao quebrar a estetica do artigo.
+7. Inclua um CTA claro, sem parecer propaganda agressiva.
+8. Crie interlinks para posts relacionados do Clube 3D Brasil.
 
 ## Checklist final antes de publicar
 

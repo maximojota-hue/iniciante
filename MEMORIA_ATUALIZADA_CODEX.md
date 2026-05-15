@@ -24,7 +24,10 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Depois de dizer o tema, pedir uma das opcoes:
   - usar afiliado cadastrado por numero em `CONTROLE_AFILIADOS.md`;
   - cadastrar novo produto com nome curto, link afiliado e foto;
+  - selecionar/enviar mais 1 afiliado;
   - criar sem afiliado.
+- O maximo e 3 afiliados por post.
+- Antes de criar o post, confirmar se a selecao de afiliados esta fechada ou se o usuario quer adicionar/selecionar mais um afiliado.
 - Quando o usuario enviar nome curto, link afiliado e foto, registrar em `CONTROLE_AFILIADOS.md` com numeracao sequencial simples.
 - Se o usuario escolher post sem afiliado, confirmar explicitamente que o rascunho sera criado sem bloco afiliado.
 - Todo post criado deve ser registrado em `CONTROLE_POSTS.md` com numeracao simples e status de WordPress/Telegram.
@@ -64,19 +67,21 @@ Sequencia recomendada para cada post:
 2. Pesquisar tendencias atuais no YouTube e/ou paginas web BR + US.
 3. Dizer ao usuario qual sera o tema do post antes de escrever.
 4. Receber ID de afiliado cadastrado, cadastrar novo afiliado ou confirmar post sem afiliado.
-5. Gerar estrutura SEO: titulo, slug, meta title, meta description, H1/H2/H3, FAQ e CTA.
-6. Inserir afiliados quando houver:
+5. Perguntar se o usuario quer adicionar/selecionar mais 1 afiliado, ate o limite de 3.
+6. Confirmar que a lista de afiliados do post esta fechada antes de escrever.
+7. Gerar estrutura SEO: titulo, slug, meta title, meta description, H1/H2/H3, FAQ e CTA.
+8. Inserir afiliados quando houver:
    - imagem do produto dentro do texto;
    - hyperlink na imagem;
    - abrir em nova aba;
    - imagem redimensionada para nao quebrar estetica.
-7. Criar ou escolher imagem principal chamativa.
-8. Publicar como rascunho no WordPress.
-9. Registrar ou atualizar a linha do post em `CONTROLE_POSTS.md`.
-10. Revisar Yoast, categoria, interlinks e imagem destacada.
-11. Publicar.
-12. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
-13. Atualizar `CONTROLE_POSTS.md` com `publicado` e `telegram enviado` quando acontecer.
+9. Criar ou escolher imagem principal chamativa.
+10. Publicar como rascunho no WordPress.
+11. Registrar ou atualizar a linha do post em `CONTROLE_POSTS.md`.
+12. Revisar Yoast, categoria, interlinks e imagem destacada.
+13. Publicar.
+14. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
+15. Atualizar `CONTROLE_POSTS.md` com `publicado` e `telegram enviado` quando acontecer.
 
 ## Geracao de Conteudo
 

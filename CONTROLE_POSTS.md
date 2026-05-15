@@ -24,7 +24,9 @@ Antes de gerar qualquer novo post:
 1. Dizer claramente sobre o que sera o post.
 2. Perguntar se o usuario quer usar um afiliado cadastrado pelo numero em `CONTROLE_AFILIADOS.md`.
 3. Se for produto novo, pedir nome curto, link afiliado e foto.
-4. Aceitar a opcao `criar sem afiliado`.
+4. Perguntar se o usuario quer selecionar/enviar mais 1 afiliado antes de criar o post.
+5. Respeitar o limite maximo de 3 afiliados por post.
+6. Aceitar a opcao `criar sem afiliado`.
 
 Se nao houver afiliado para o tema, confirmar explicitamente que o post sera criado sem bloco afiliado.
 
