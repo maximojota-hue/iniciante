@@ -80,6 +80,20 @@ Nunca publique esses arquivos em um repo aberto.
 
 ## Como rodar
 
+No Windows, o caminho mais simples e abrir o instalador grafico:
+
+```bash
+python instalador_gui.py
+```
+
+Ou dar duplo clique em:
+
+```text
+abrir_instalador_gui.bat
+```
+
+O instalador verifica o ambiente, instala dependencias, salva `.env`/`config.json`, testa o WordPress, cria atalhos locais e pode abrir o app principal.
+
 ```bash
 pip install -r requirements.txt
 python setup.py
