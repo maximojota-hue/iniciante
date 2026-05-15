@@ -11,6 +11,7 @@ from __future__ import annotations
 import base64
 import json
 import os
+import re
 from pathlib import Path
 
 import requests
@@ -152,6 +153,7 @@ COMMUNITY_JS = f"""
         if (quickForCommunity && !document.querySelector('.c3d-community-bridge')) {{
           var community = document.createElement('section');
           community.className = 'c3d-community-bridge reveal visible';
+          community.setAttribute('aria-label', 'Bloco Whatsapp Stl');
           community.innerHTML =
             '<div class=\"c3d-community-bridge-top\">' +
               '<span class=\"c3d-community-bridge-kicker\">STL gratis + arquivos baratos</span>' +
@@ -169,7 +171,12 @@ COMMUNITY_JS = f"""
               '<div class=\"c3d-community-point\"><strong>Vaquinhas</strong><span>Compra coletiva de arquivos premium quando a comunidade quer testar um modelo.</span></div>' +
               '<div class=\"c3d-community-point\"><strong>Testes reais</strong><span>Resultados, configuracoes, filamentos e alertas de makers brasileiros.</span></div>' +
             '</div>';
-          quickForCommunity.insertAdjacentElement('afterend', community);
+          var footerForCommunity = document.querySelector('footer, .site-footer');
+          if (footerForCommunity && footerForCommunity.parentNode) {{
+            footerForCommunity.insertAdjacentElement('beforebegin', community);
+          }} else if (quickForCommunity.parentNode) {{
+            quickForCommunity.parentNode.appendChild(community);
+          }}
         }}
 """
 
@@ -181,10 +188,14 @@ def aplicar_alteracoes(code: str) -> str:
             raise RuntimeError("Marcador CSS nao encontrado no snippet 10.")
         code = code.replace(marker_css, COMMUNITY_CSS + "\n" + marker_css, 1)
 
-    if "var quickForCommunity = document.querySelector('.quick-nav');" not in code:
-        marker_js = "        setText('.ticker-label'"
-        if marker_js not in code:
-            raise RuntimeError("Marcador JS nao encontrado no snippet 10.")
+    marker_js = "        setText('.ticker-label'"
+    inicio_js = "        var quickForCommunity = document.querySelector('.quick-nav');"
+    if marker_js not in code:
+        raise RuntimeError("Marcador JS nao encontrado no snippet 10.")
+    if inicio_js in code:
+        pattern = re.compile(re.escape(inicio_js) + r".*?(?=" + re.escape(marker_js) + r")", re.S)
+        code = pattern.sub(COMMUNITY_JS + "\n", code, count=1)
+    else:
         code = code.replace(marker_js, COMMUNITY_JS + "\n" + marker_js, 1)
 
     if "@media (max-width: 700px) {" in code and ".c3d-community-points { grid-template-columns: 1fr; }" not in code:

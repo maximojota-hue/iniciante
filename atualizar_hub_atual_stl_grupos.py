@@ -27,8 +27,10 @@ WHATSAPP_PRINCIPAL = "https://chat.whatsapp.com/CVnLPEIcaIE3BeIk2lwDVZ"
 WHATSAPP_STL = "https://chat.whatsapp.com/DnPdJcOuVcfCln1vAdgWwj"
 WHATSAPP_GERAL = "https://chat.whatsapp.com/DEZxJq456FW7xACVxZvXod"
 
-BLOCO_INICIO = "<!-- clube3d-hub-stl-gratis-grupos:start -->"
-BLOCO_FIM = "<!-- clube3d-hub-stl-gratis-grupos:end -->"
+BLOCO_INICIO_ANTIGO = "<!-- clube3d-hub-stl-gratis-grupos:start -->"
+BLOCO_FIM_ANTIGO = "<!-- clube3d-hub-stl-gratis-grupos:end -->"
+BLOCO_INICIO = "<!-- Bloco Whatsapp Stl:start -->"
+BLOCO_FIM = "<!-- Bloco Whatsapp Stl:end -->"
 
 
 def carregar_env() -> None:
@@ -206,7 +208,7 @@ def bloco_comunidade() -> str:
   .c3d-community-item:last-child {{ border-bottom: 0; }}
 }}
 </style>
-<section class="c3d-community-hub" aria-label="STL gratis, arquivos baratos e comunidade">
+<section class="c3d-community-hub" aria-label="Bloco Whatsapp Stl">
   <div class="c3d-community-top">
     <span class="c3d-community-kicker">Arquivos gratis, baratos e testados</span>
     <h2>Baixe STL gratis e entre nos grupos do Clube 3D Brasil</h2>
@@ -246,16 +248,17 @@ def bloco_comunidade() -> str:
 
 def atualizar_conteudo(content: str) -> tuple[str, str]:
     bloco = bloco_comunidade()
-    if BLOCO_INICIO in content and BLOCO_FIM in content:
-        pattern = re.compile(re.escape(BLOCO_INICIO) + r".*?" + re.escape(BLOCO_FIM), re.S)
-        return pattern.sub(bloco, content), "atualizado"
+    acao = "adicionado"
+    for inicio, fim in (
+        (BLOCO_INICIO, BLOCO_FIM),
+        (BLOCO_INICIO_ANTIGO, BLOCO_FIM_ANTIGO),
+    ):
+        if inicio in content and fim in content:
+            pattern = re.compile(re.escape(inicio) + r".*?" + re.escape(fim), re.S)
+            content = pattern.sub("", content).strip()
+            acao = "atualizado"
 
-    primeiro_fechamento = content.find("</p>")
-    if primeiro_fechamento >= 0:
-        pos = primeiro_fechamento + len("</p>")
-        return content[:pos] + "\n" + bloco + "\n" + content[pos:], "adicionado"
-
-    return bloco + "\n" + content, "adicionado"
+    return content.rstrip() + "\n\n" + bloco + "\n", acao
 
 
 def main() -> None:
