@@ -11,12 +11,14 @@ Uso:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
 import shutil
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
@@ -203,13 +205,59 @@ def pontuar_resultado(resultado: ResultadoBusca, tema: str, conteudo: str) -> in
     return max(0, min(score, 100))
 
 
-def pesquisar_fontes(tema: str, por_mercado: int = 4, log_fn=print) -> list[dict]:
+def _cache_path_url(url: str) -> Path:
+    digest = hashlib.sha1(url.encode("utf-8")).hexdigest()
+    return Path("reports") / "web_cache" / f"{digest}.json"
+
+
+def extrair_conteudo_web_cache(url: str, log_fn=print, usar_cache: bool = True) -> dict:
+    cache_path = _cache_path_url(url)
+    if usar_cache and cache_path.exists():
+        try:
+            data = json.loads(cache_path.read_text(encoding="utf-8"))
+            log_fn(f"  [cache] {url}")
+            return data
+        except Exception:
+            pass
+
+    data = seo_writer.extrair_conteudo_web(url, log_fn=log_fn)
+    if usar_cache and data.get("conteudo"):
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    return data
+
+
+def _extrair_e_pontuar(item: ResultadoBusca, tema: str, log_fn=print, usar_cache: bool = True) -> dict:
+    extraido = extrair_conteudo_web_cache(item.url, log_fn=log_fn, usar_cache=usar_cache)
+    conteudo = extraido.get("conteudo", "")
+    item.conteudo_chars = len(conteudo)
+    item.score = pontuar_resultado(item, tema, conteudo)
+    return {
+        **asdict(item),
+        "titulo_extraido": extraido.get("titulo", ""),
+        "descricao": extraido.get("descricao", ""),
+        "conteudo": conteudo,
+    }
+
+
+def pesquisar_fontes(
+    tema: str,
+    por_mercado: int = 2,
+    log_fn=print,
+    max_candidatos_mercado: int | None = None,
+    workers_extracao: int = 4,
+    usar_cache: bool = True,
+    pausa_busca: float = 0.2,
+) -> list[dict]:
     queries = criar_queries(tema)
     candidatos: list[ResultadoBusca] = []
     vistos = set()
+    max_candidatos_mercado = max_candidatos_mercado or max(3, por_mercado * 2)
 
     for mercado, lista_queries in queries.items():
         for query in lista_queries:
+            if sum(1 for item in candidatos if item.mercado == mercado) >= max_candidatos_mercado:
+                break
             log_fn(f"  [{mercado.upper()}] buscando: {query}")
             try:
                 for item in buscar_duckduckgo(query, mercado, por_mercado):
@@ -218,22 +266,23 @@ def pesquisar_fontes(tema: str, por_mercado: int = 4, log_fn=print) -> list[dict
                     if chave not in vistos:
                         candidatos.append(item)
                         vistos.add(chave)
-                time.sleep(1)
+                        if sum(1 for atual in candidatos if atual.mercado == mercado) >= max_candidatos_mercado:
+                            break
+                time.sleep(pausa_busca)
             except Exception as exc:
                 log_fn(f"  AVISO busca falhou: {exc}")
 
     fontes = []
-    for item in candidatos:
-        extraido = seo_writer.extrair_conteudo_web(item.url, log_fn=log_fn)
-        conteudo = extraido.get("conteudo", "")
-        item.conteudo_chars = len(conteudo)
-        item.score = pontuar_resultado(item, tema, conteudo)
-        fontes.append({
-            **asdict(item),
-            "titulo_extraido": extraido.get("titulo", ""),
-            "descricao": extraido.get("descricao", ""),
-            "conteudo": conteudo,
-        })
+    with ThreadPoolExecutor(max_workers=max(1, workers_extracao)) as executor:
+        futuros = {
+            executor.submit(_extrair_e_pontuar, item, tema, log_fn, usar_cache): item
+            for item in candidatos
+        }
+        for futuro in as_completed(futuros):
+            try:
+                fontes.append(futuro.result())
+            except Exception as exc:
+                log_fn(f"  AVISO extracao falhou: {exc}")
 
     fontes.sort(key=lambda f: (f["mercado"], -f["score"]))
     selecionadas = []
@@ -242,26 +291,22 @@ def pesquisar_fontes(tema: str, por_mercado: int = 4, log_fn=print) -> list[dict
     return selecionadas
 
 
-def carregar_fontes_manuais(urls: list[str], tema: str, log_fn=print) -> list[dict]:
+def carregar_fontes_manuais(urls: list[str], tema: str, log_fn=print, usar_cache: bool = True) -> list[dict]:
     fontes = []
     for url in urls:
         mercado = "br" if ".br" in dominio(url) or "/pt" in url.lower() else "us"
         item = ResultadoBusca(mercado=mercado, titulo=url, url=url, snippet="")
-        extraido = seo_writer.extrair_conteudo_web(url, log_fn=log_fn)
-        conteudo = extraido.get("conteudo", "")
-        item.conteudo_chars = len(conteudo)
-        item.score = pontuar_resultado(item, tema, conteudo)
-        fontes.append({
-            **asdict(item),
-            "titulo_extraido": extraido.get("titulo", ""),
-            "descricao": extraido.get("descricao", ""),
-            "conteudo": conteudo,
-        })
+        fontes.append(_extrair_e_pontuar(item, tema, log_fn=log_fn, usar_cache=usar_cache))
     fontes.sort(key=lambda f: (f["mercado"], -f["score"]))
     return fontes
 
 
-def montar_contexto_comparativo(tema: str, fontes: list[dict]) -> tuple[str, str]:
+def montar_contexto_comparativo(
+    tema: str,
+    fontes: list[dict],
+    chars_por_fonte: int = 700,
+    contexto_total_max: int = 4500,
+) -> tuple[str, str]:
     br = [f for f in fontes if f["mercado"] == "br"]
     us = [f for f in fontes if f["mercado"] == "us"]
 
@@ -279,19 +324,19 @@ def montar_contexto_comparativo(tema: str, fontes: list[dict]) -> tuple[str, str
     for idx, fonte in enumerate(br, 1):
         blocos.append(
             f"{idx}. {fonte['titulo_extraido'] or fonte['titulo']} | {fonte['url']} | score {fonte['score']}\n"
-            f"Resumo bruto: {fonte['conteudo'][:1200]}"
+            f"Resumo bruto: {fonte['conteudo'][:chars_por_fonte]}"
         )
 
     blocos.append("\nFontes americanas/internacionais:")
     for idx, fonte in enumerate(us, 1):
         blocos.append(
             f"{idx}. {fonte['titulo_extraido'] or fonte['titulo']} | {fonte['url']} | score {fonte['score']}\n"
-            f"Resumo bruto: {fonte['conteudo'][:1200]}"
+            f"Resumo bruto: {fonte['conteudo'][:chars_por_fonte]}"
         )
 
     titulos = " | ".join((f["titulo_extraido"] or f["titulo"])[:90] for f in fontes[:4])
     urls = ", ".join(f["url"] for f in fontes[:6])
-    return titulos, "\n\n".join(blocos)[:9000] + f"\n\nURLs consultadas: {urls}"
+    return titulos, "\n\n".join(blocos)[:contexto_total_max] + f"\n\nURLs consultadas: {urls}"
 
 
 def keyword_para_secundarias(keyword: str) -> list[str]:
@@ -318,7 +363,7 @@ def copiar_imagem_afiliado(caminho: str, nome_produto: str) -> str:
 def gerar_post_por_pesquisa_web(
     tema: str,
     categoria: str,
-    por_mercado: int = 3,
+    por_mercado: int = 2,
     publicar: bool = False,
     affiliate_url: str = "",
     affiliate_name: str = "",
@@ -327,14 +372,42 @@ def gerar_post_por_pesquisa_web(
     source_urls: list[str] | None = None,
     affiliates_json: str = "",
     affiliates_file: str = "",
+    modo_completo: bool = False,
+    usar_cache: bool = True,
+    workers_extracao: int = 4,
 ) -> dict:
     print("\n" + "=" * 70)
     print(f"Pesquisa web comparativa: {tema}")
     print("=" * 70)
 
-    fontes = carregar_fontes_manuais(source_urls, tema, log_fn=print) if source_urls else []
+    if modo_completo:
+        chars_por_fonte = 1200
+        contexto_total_max = 9000
+        contexto_modelo_max = 4000
+        max_tokens_modelo = 4096
+        faixa_palavras = "900-1.100"
+        max_candidatos_mercado = max(6, por_mercado * 3)
+        pausa_busca = 1.0
+    else:
+        chars_por_fonte = 700
+        contexto_total_max = 4500
+        contexto_modelo_max = 3000
+        max_tokens_modelo = 3072
+        faixa_palavras = "700-850"
+        max_candidatos_mercado = max(3, por_mercado * 2)
+        pausa_busca = 0.2
+
+    fontes = carregar_fontes_manuais(source_urls, tema, log_fn=print, usar_cache=usar_cache) if source_urls else []
     if not fontes:
-        fontes = pesquisar_fontes(tema, por_mercado=por_mercado, log_fn=print)
+        fontes = pesquisar_fontes(
+            tema,
+            por_mercado=por_mercado,
+            log_fn=print,
+            max_candidatos_mercado=max_candidatos_mercado,
+            workers_extracao=workers_extracao,
+            usar_cache=usar_cache,
+            pausa_busca=pausa_busca,
+        )
     if not fontes:
         raise RuntimeError("Nenhuma fonte web util encontrada para o tema.")
 
@@ -342,7 +415,19 @@ def gerar_post_por_pesquisa_web(
     for fonte in fontes:
         print(f"  [{fonte['mercado'].upper()}] {fonte['score']:>3} | {fonte['titulo'][:72]} | {fonte['url']}")
 
-    page_title, page_content = montar_contexto_comparativo(tema, fontes)
+    page_title, page_content = montar_contexto_comparativo(
+        tema,
+        fontes,
+        chars_por_fonte=chars_por_fonte,
+        contexto_total_max=contexto_total_max,
+    )
+    print(
+        "\nModo de geracao: "
+        f"{'completo' if modo_completo else 'rapido'} | "
+        f"contexto={len(page_content)} chars | "
+        f"saida={faixa_palavras} palavras | "
+        f"cache={'on' if usar_cache else 'off'}"
+    )
     afiliados_override = None
     if affiliates_file:
         afiliados_data = json.loads(Path(affiliates_file).read_text(encoding="utf-8"))
@@ -385,6 +470,9 @@ def gerar_post_por_pesquisa_web(
         categoria=categoria,
         afiliados_override=afiliados_override,
         log_fn=print,
+        contexto_max_chars=contexto_modelo_max,
+        max_tokens=max_tokens_modelo,
+        faixa_palavras=faixa_palavras,
     )
     if featured_image_path:
         post["featured_image_path"] = featured_image_path
@@ -422,8 +510,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Gera post SEO via pesquisa web BR + US.")
     parser.add_argument("tema", nargs="?", help="Tema ou keyword principal do post.")
     parser.add_argument("--categoria", default="Impressao 3D", help="Categoria WordPress/SEO.")
-    parser.add_argument("--por-mercado", type=int, default=3, help="Fontes por mercado BR/US.")
+    parser.add_argument("--por-mercado", type=int, default=2, help="Fontes por mercado BR/US.")
     parser.add_argument("--publicar", action="store_true", help="Publica como rascunho no WordPress.")
+    parser.add_argument("--completo", action="store_true", help="Usa pesquisa/contexto maiores e post mais longo.")
+    parser.add_argument("--sem-cache", action="store_true", help="Ignora cache local de paginas web.")
+    parser.add_argument("--workers-extracao", type=int, default=4, help="Downloads paralelos de paginas fonte.")
     parser.add_argument("--affiliate-url", default="", help="Link de afiliado para inserir no post.")
     parser.add_argument("--affiliate-name", default="", help="Nome do produto afiliado.")
     parser.add_argument("--affiliate-image", default="", help="Foto do produto afiliado para aparecer no texto.")
@@ -449,6 +540,9 @@ def main() -> None:
         source_urls=args.source_url,
         affiliates_json=args.affiliates_json,
         affiliates_file=args.affiliates_file,
+        modo_completo=args.completo,
+        usar_cache=not args.sem_cache,
+        workers_extracao=max(1, min(args.workers_extracao, 8)),
     )
 
 

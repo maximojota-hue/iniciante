@@ -104,6 +104,26 @@ Para publicar o resultado como rascunho no WordPress:
 python gerar_post_web_pesquisa.py "Bambu Lab A1 review" --categoria "Impressoras e Reviews" --publicar
 ```
 
+Por padrao, o fluxo web roda em modo rapido para economizar tempo e tokens:
+
+- 2 fontes por mercado BR/US
+- cache local de paginas em `reports/web_cache/`
+- extracao paralela das fontes
+- contexto compacto para o modelo
+- post com cerca de 700-850 palavras
+
+Para uma pesquisa mais profunda e post maior, use:
+
+```bash
+python gerar_post_web_pesquisa.py "Bambu Lab A1 review" --categoria "Impressoras e Reviews" --completo --publicar
+```
+
+Para ignorar o cache:
+
+```bash
+python gerar_post_web_pesquisa.py "filamento PLA silk" --sem-cache
+```
+
 O fluxo web tambem aceita fontes manuais, link afiliado e imagem principal:
 
 ```bash

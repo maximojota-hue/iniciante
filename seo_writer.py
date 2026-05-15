@@ -344,6 +344,8 @@ def _build_user_prompt_web(
     page_content: str,
     page_url: str,
     categoria: str,
+    contexto_max_chars: int = 3000,
+    faixa_palavras: str = "700-850",
 ) -> str:
     secondary = ", ".join(secondary_kws) if secondary_kws else "nenhuma"
 
@@ -352,7 +354,7 @@ def _build_user_prompt_web(
         page_block = (
             f"\n### Conteudo da pagina de referencia ({page_url}):\n"
             f"Titulo: {page_title}\n"
-            f"{page_content[:4000]}\n"
+            f"{page_content[:contexto_max_chars]}\n"
         )
 
     cat_tag = categoria if categoria else "Impressao 3D"
@@ -375,7 +377,7 @@ def _build_user_prompt_web(
 
 ## REGRAS DE TEXTO:
 - Portugues brasileiro, frases curtas (8-15 palavras), max. 4 frases por paragrafo
-- 900-1.100 palavras totais no post_content
+- {faixa_palavras} palavras totais no post_content
 - Keyword principal: max. 4 ocorrencias
 - ZERO emojis, ZERO travessao (-), ZERO ponto e virgula
 - Links externos (2-3): fontes confiaveis como Printables, MakerWorld, Thingiverse, Prusa, Bambu Lab — sempre com target="_blank" rel="noopener noreferrer"
@@ -395,6 +397,9 @@ def gerar_post_web(
     categoria: str = "Impressao 3D",
     afiliados_override: list = None,
     log_fn=None,
+    contexto_max_chars: int = 3000,
+    max_tokens: int = 3072,
+    faixa_palavras: str = "700-850",
 ) -> dict:
     """
     Gera post SEO a partir de conteudo de pagina web (sem YouTube).
@@ -435,7 +440,14 @@ def gerar_post_web(
 
     client = anthropic.Anthropic(api_key=api_key)
     prompt = _build_user_prompt_web(
-        keyword, secondary_kws, page_title, page_content, page_url, categoria,
+        keyword,
+        secondary_kws,
+        page_title,
+        page_content,
+        page_url,
+        categoria,
+        contexto_max_chars=contexto_max_chars,
+        faixa_palavras=faixa_palavras,
     )
     raw = ""
 
@@ -446,7 +458,7 @@ def gerar_post_web(
         )
         message = client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=4096,
+            max_tokens=max_tokens,
             system=_build_system_prompt_web(categoria),
             messages=[{"role": "user", "content": user_msg}],
         )
