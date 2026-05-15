@@ -158,6 +158,28 @@ python pinterest_automacao.py create-board "Impressao 3D para Iniciantes"
 python pinterest_automacao.py publish --manifest "output/pinterest/bambu-lab-a1-mini-vale-a-pena/pins.json" --board-id "ID_DA_BOARD"
 ```
 
+Para avisar um grupo do Telegram quando um post for publicado pelo pipeline:
+
+```bash
+# No .env
+TELEGRAM_BOT_TOKEN=123456:ABC...
+TELEGRAM_CHAT_ID=-1001234567890
+TELEGRAM_ENABLED=true
+TELEGRAM_NOTIFY_STATUSES=publish
+```
+
+```bash
+python telegram_notifier.py
+```
+
+Para descobrir o `TELEGRAM_CHAT_ID`, adicione o bot no grupo, envie qualquer mensagem no grupo e rode:
+
+```bash
+python telegram_notifier.py updates
+```
+
+O aviso automatico pelo Python acontece quando o post sai com status `publish`. Para receber aviso tambem quando publicar manualmente pelo painel do WordPress, instale o snippet `wordpress_snippets/telegram_notify_on_publish.php` no Code Snippets e configure as constantes `CLUBE3D_TELEGRAM_BOT_TOKEN` e `CLUBE3D_TELEGRAM_CHAT_ID` no `wp-config.php`.
+
 Para rodar a auditoria SEO local do Clube 3D:
 
 ```bash

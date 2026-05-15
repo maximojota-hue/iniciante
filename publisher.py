@@ -17,6 +17,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+import telegram_notifier
+
 logger = logging.getLogger(__name__)
 
 
@@ -27,6 +29,7 @@ class WordPressApiError(RuntimeError):
 class WordPressPublisher:
 
     def __init__(self, config: dict):
+        self.config   = config
         self.wp_url   = config["wp_url"].rstrip("/")
         self.user     = config["wp_user"]
         self.password = config["wp_app_password"]
@@ -401,7 +404,27 @@ class WordPressPublisher:
             self._slug_cache[slug] = dados
         logger.info("Post criado com sucesso: %s", url)
         print(f"  ✅ Post criado! ID: {wp_id} | {url}")
-        return {"wp_id": wp_id, "url": url, "slug": slug, "titulo": titulo, "status": post.get("status", "draft")}
+        result = {"wp_id": wp_id, "url": url, "slug": slug, "titulo": titulo, "status": post.get("status", "draft")}
+
+        status_notificar = {
+            item.strip().lower()
+            for item in str(self.config.get("telegram_notify_statuses", "publish")).split(",")
+            if item.strip()
+        }
+        if result["status"].lower() in status_notificar:
+            try:
+                enviado = telegram_notifier.notify_post_from_config(
+                    self.config,
+                    result,
+                    excerpt=post.get("excerpt", ""),
+                )
+                if enviado:
+                    print("  ✅ Aviso enviado para o Telegram.")
+            except Exception as exc:
+                logger.warning("Telegram NÃO enviado para post %s: %s", wp_id, exc)
+                print(f"  ⚠️  Telegram NÃO enviado: {exc}")
+
+        return result
 
     def upload_media(self, caminho: str, alt_text: str = "") -> tuple[int | None, str]:
         """Envia imagem para a biblioteca de midia do WordPress. Retorna (id, url)."""

@@ -102,6 +102,16 @@ def carregar_config_wp() -> dict:
                 cfg["wp_app_password"] = v
             if k.strip() == "WP_URL":
                 cfg["wp_url"] = v
+            if k.strip() == "TELEGRAM_BOT_TOKEN":
+                cfg["telegram_bot_token"] = v
+            if k.strip() == "TELEGRAM_CHAT_ID":
+                cfg["telegram_chat_id"] = v
+            if k.strip() == "TELEGRAM_ENABLED":
+                cfg["telegram_enabled"] = v
+            if k.strip() == "TELEGRAM_NOTIFY_STATUSES":
+                cfg["telegram_notify_statuses"] = v
+            if k.strip() == "TELEGRAM_TIMEOUT":
+                cfg["telegram_timeout"] = v
     cfg.setdefault("wp_url", "https://clube3dbrasil.com")
     cfg["wp_post_status"] = "draft"
     return cfg
