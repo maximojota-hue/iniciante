@@ -11,6 +11,7 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Nicho: impressao 3D no Brasil, com foco em iniciantes, STL geek, filamentos, impressoras, reviews, modelos gratis/baratos, grupos e monetizacao por afiliados/comunidade.
 - Arquivos sensiveis: `.env`, `.env.helio`, `config.json`. Nunca exibir credenciais.
 - Controle sequencial dos posts: `CONTROLE_POSTS.md`.
+- Controle sequencial dos afiliados: `CONTROLE_AFILIADOS.md`.
 
 ## Regras Operacionais
 
@@ -19,11 +20,13 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Posts criados aqui no chat: gerar texto pelo proprio Codex/ChatGPT, sem chamar API externa de conteudo.
 - Posts criados pelo app local/scripts: usar o provedor configurado em `llm_provider`.
 - Se houver `ANTHROPIC_API_KEY` e `OPENAI_API_KEY`, respeitar a escolha ativa no app/config.
-- Antes de criar qualquer post, pedir ao usuario:
-  - link afiliado do produto ou produtos;
-  - foto correspondente de cada produto;
-  - nome curto do produto, se houver mais de um.
-- Se o usuario nao tiver produto afiliado para aquele post, confirmar explicitamente que o rascunho sera criado sem afiliado.
+- Antes de criar qualquer post, dizer claramente sobre o que sera o post.
+- Depois de dizer o tema, pedir uma das opcoes:
+  - usar afiliado cadastrado por numero em `CONTROLE_AFILIADOS.md`;
+  - cadastrar novo produto com nome curto, link afiliado e foto;
+  - criar sem afiliado.
+- Quando o usuario enviar nome curto, link afiliado e foto, registrar em `CONTROLE_AFILIADOS.md` com numeracao sequencial simples.
+- Se o usuario escolher post sem afiliado, confirmar explicitamente que o rascunho sera criado sem bloco afiliado.
 - Todo post criado deve ser registrado em `CONTROLE_POSTS.md` com numeracao simples e status de WordPress/Telegram.
 - Publicacao WordPress deve ir como rascunho ate revisar imagem, afiliados, Yoast e interlinks.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar post.
@@ -59,20 +62,21 @@ Sequencia recomendada para cada post:
 
 1. Definir tema prioritario pela estrategia de 30 dias.
 2. Pesquisar tendencias atuais no YouTube e/ou paginas web BR + US.
-3. Gerar estrutura SEO: titulo, slug, meta title, meta description, H1/H2/H3, FAQ e CTA.
-4. Pedir link e foto do produto/produtos afiliados antes de escrever o post.
-5. Inserir afiliados quando houver:
+3. Dizer ao usuario qual sera o tema do post antes de escrever.
+4. Receber ID de afiliado cadastrado, cadastrar novo afiliado ou confirmar post sem afiliado.
+5. Gerar estrutura SEO: titulo, slug, meta title, meta description, H1/H2/H3, FAQ e CTA.
+6. Inserir afiliados quando houver:
    - imagem do produto dentro do texto;
    - hyperlink na imagem;
    - abrir em nova aba;
    - imagem redimensionada para nao quebrar estetica.
-6. Criar ou escolher imagem principal chamativa.
-7. Publicar como rascunho no WordPress.
-8. Registrar ou atualizar a linha do post em `CONTROLE_POSTS.md`.
-9. Revisar Yoast, categoria, interlinks e imagem destacada.
-10. Publicar.
-11. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
-12. Atualizar `CONTROLE_POSTS.md` com `publicado` e `telegram enviado` quando acontecer.
+7. Criar ou escolher imagem principal chamativa.
+8. Publicar como rascunho no WordPress.
+9. Registrar ou atualizar a linha do post em `CONTROLE_POSTS.md`.
+10. Revisar Yoast, categoria, interlinks e imagem destacada.
+11. Publicar.
+12. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
+13. Atualizar `CONTROLE_POSTS.md` com `publicado` e `telegram enviado` quando acontecer.
 
 ## Geracao de Conteudo
 
@@ -164,6 +168,7 @@ python auditoria_seo_clube3d.py https://clube3dbrasil.com --limit 30
 - `AGENTS.md`: regras do projeto para o Codex.
 - `MEMORIA_ATUALIZADA_CODEX.md`: este resumo rapido.
 - `CONTROLE_POSTS.md`: lista sequencial dos posts, status WordPress e status Telegram.
+- `CONTROLE_AFILIADOS.md`: lista sequencial dos produtos afiliados cadastrados.
 - `RESUMO_OPERACIONAL_CODEX.md`: memoria antiga/expandida.
 - `README.md`: instrucoes gerais.
 - `dashboard_30_dias.html`: plano editorial visual.

@@ -6,13 +6,16 @@ Antes de explorar codigo, tente o `code-review-graph`. O repo esta registrado co
 
 Memoria curta do projeto: leia primeiro `MEMORIA_ATUALIZADA_CODEX.md` antes de retomar tarefas grandes. Se precisar de historico mais antigo, consulte tambem `RESUMO_OPERACIONAL_CODEX.md`.
 Controle sequencial dos posts: atualize `CONTROLE_POSTS.md` sempre que criar rascunho, publicar ou enviar chamada ao Telegram.
+Controle sequencial dos afiliados: atualize `CONTROLE_AFILIADOS.md` sempre que o usuario enviar nome curto, link e foto de produto.
 
 Regras importantes:
 - Nunca exibir credenciais de `.env`, `.env.helio` ou `config.json`.
 - Quando gerar post diretamente no chat, nao usar API externa de conteudo. Gerar no proprio chat.
 - Quando gerar post pelo app local ou por scripts do projeto, usar o provedor configurado em `llm_provider`.
 - Se houver mais de uma API cadastrada, respeitar a escolha atual de `llm_provider` (`anthropic` ou `openai`).
-- Antes de gerar qualquer post, perguntar ao usuario o link e a foto do produto/produtos afiliados. Se o usuario nao tiver afiliado para aquele post, confirmar que o rascunho sera criado sem bloco afiliado.
+- Antes de gerar qualquer post, dizer claramente sobre o que sera o post.
+- Depois de dizer o tema, perguntar se o usuario quer usar um afiliado cadastrado pelo numero em `CONTROLE_AFILIADOS.md`, cadastrar novo produto com nome curto/link/foto, ou criar sem afiliado.
+- Quando o usuario enviar nome curto, link afiliado e foto, registrar em `CONTROLE_AFILIADOS.md` com numeracao sequencial simples.
 - Todo post criado deve entrar em `CONTROLE_POSTS.md` com numeracao sequencial simples e status de WordPress/Telegram.
 - Preferir rascunho no WordPress ate revisar imagens e afiliados.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar posts.

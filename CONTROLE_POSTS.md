@@ -15,15 +15,16 @@ Lista sequencial simples dos posts criados no projeto a partir do fluxo atual.
 | # | Titulo | Slug | WP ID | Status WordPress | Telegram | Afiliado | Observacoes |
 |---:|---|---|---:|---|---|---|---|
 | 1 | Melhores Sites para Baixar STL Gratis em 2026: Guia para Makers Brasileiros | `melhores-sites-baixar-stl-gratis-2026` | 3003 | publicado | telegram enviado | sem afiliado | Post pilar para o Bloco Whatsapp Stl e busca por STL gratis. |
-| 2 | A definir | `a-definir` | - | aguardando afiliado | nao enviado | aguardando link e foto | Proximo post so deve ser gerado apos receber produto/produtos afiliados ou confirmacao de post sem afiliado. |
+| 2 | A definir | `a-definir` | - | aguardando afiliado | nao enviado | aguardando ID de afiliado, novo produto ou confirmacao sem afiliado | Antes de criar, dizer qual sera o tema do post. |
 
 ## Regra Para Novos Posts
 
-Antes de gerar qualquer novo post, pedir:
+Antes de gerar qualquer novo post:
 
-1. Link afiliado do produto ou produtos.
-2. Foto correspondente de cada produto.
-3. Nome curto do produto, quando houver mais de um.
+1. Dizer claramente sobre o que sera o post.
+2. Perguntar se o usuario quer usar um afiliado cadastrado pelo numero em `CONTROLE_AFILIADOS.md`.
+3. Se for produto novo, pedir nome curto, link afiliado e foto.
+4. Aceitar a opcao `criar sem afiliado`.
 
 Se nao houver afiliado para o tema, confirmar explicitamente que o post sera criado sem bloco afiliado.
 
