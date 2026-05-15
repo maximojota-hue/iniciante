@@ -93,6 +93,7 @@ abrir_instalador_gui.bat
 ```
 
 O instalador verifica o ambiente, instala dependencias, salva `.env`/`config.json`, testa o WordPress, cria atalhos locais e pode abrir o app principal.
+Ele tambem mostra a sequencia recomendada para criar posts e abre o guia `GUIA_POSTAGEM.md`.
 
 ```bash
 pip install -r requirements.txt

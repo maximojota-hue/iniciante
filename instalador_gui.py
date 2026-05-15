@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parent
 ENV_PATH = ROOT / ".env"
 CONFIG_PATH = ROOT / "config.json"
 REQUIREMENTS_PATH = ROOT / "requirements.txt"
+GUIDE_PATH = ROOT / "GUIA_POSTAGEM.md"
 
 
 DEFAULT_CONFIG = {
@@ -166,7 +167,7 @@ class InstallerApp:
 
     def _build_actions(self, parent: ttk.Frame) -> None:
         box = ttk.LabelFrame(parent, text="Acoes", padding=10, style="Section.TLabelframe")
-        box.pack(fill="both", expand=True)
+        box.pack(fill="x")
 
         actions = [
             ("1. Verificar ambiente", self.check_environment),
@@ -182,6 +183,29 @@ class InstallerApp:
         ttk.Separator(box).pack(fill="x", pady=12)
         ttk.Button(box, text="Instalacao rapida (1 a 5)", command=self.quick_install).pack(fill="x", pady=5)
         ttk.Button(box, text="Abrir pasta do projeto", command=self.open_project_folder).pack(fill="x", pady=5)
+
+        guide = ttk.LabelFrame(parent, text="Sequencia para criar um post", padding=10, style="Section.TLabelframe")
+        guide.pack(fill="both", expand=True, pady=(10, 0))
+
+        ttk.Label(
+            guide,
+            text=(
+                "Depois que o ambiente estiver pronto, siga este fluxo:\n\n"
+                "1. Escolha o tema prioritario do dia.\n"
+                "2. Abra o app principal.\n"
+                "3. Use Post Web para pesquisar paginas BR/US ou YouTube para partir de video.\n"
+                "4. Carregue afiliados e selecione fotos quando o post tiver produto.\n"
+                "5. Gere o post SEO como rascunho.\n"
+                "6. Revise titulo, Yoast, imagens e links no WordPress.\n"
+                "7. Publique e divulgue em Pinterest, WhatsApp e Telegram."
+            ),
+            justify="left",
+            wraplength=330,
+        ).pack(fill="both", expand=True, anchor="n")
+
+        ttk.Button(guide, text="Abrir guia completo de postagem", command=self.open_posting_guide).pack(
+            fill="x", pady=(10, 0)
+        )
 
     def _build_log(self, parent: ttk.Frame) -> None:
         log_box = ttk.LabelFrame(parent, text="Log", padding=8, style="Section.TLabelframe")
@@ -355,6 +379,12 @@ class InstallerApp:
 
     def open_project_folder(self) -> None:
         os.startfile(str(ROOT))
+
+    def open_posting_guide(self) -> None:
+        if not GUIDE_PATH.exists():
+            messagebox.showwarning("Guia nao encontrado", "O arquivo GUIA_POSTAGEM.md nao foi encontrado.")
+            return
+        os.startfile(str(GUIDE_PATH))
 
     def quick_install(self) -> None:
         def run_all():
