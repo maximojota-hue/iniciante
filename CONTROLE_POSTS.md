@@ -15,7 +15,7 @@ Lista sequencial simples dos posts criados no projeto a partir do fluxo atual.
 | # | Titulo | Slug | WP ID | Status WordPress | Telegram | Afiliado | Observacoes |
 |---:|---|---|---:|---|---|---|---|
 | 1 | Melhores Sites para Baixar STL Gratis em 2026: Guia para Makers Brasileiros | `melhores-sites-baixar-stl-gratis-2026` | 3003 | publicado | telegram enviado | sem afiliado | Post pilar para o Bloco Whatsapp Stl e busca por STL gratis. |
-| 2 | A definir | `a-definir` | - | aguardando afiliado | nao enviado | aguardando ID de afiliado, novo produto ou confirmacao sem afiliado | Antes de criar, dizer qual sera o tema do post. |
+| 2 | Como Escolher STL Gratis Sem Desperdicar Filamento: Checklist para Iniciantes | `como-escolher-stl-gratis-sem-desperdicar-filamento` | 3007 | rascunho | nao enviado | #1 PLA Voolt Outlet | Post criado com imagem afiliada no texto e capa propria. |
 
 ## Regra Para Novos Posts
 

@@ -35,7 +35,7 @@ criar sem afiliado
 
 | # | Nome curto | Link afiliado | Foto | Status | Observacoes |
 |---:|---|---|---|---|---|
-| 1 | A cadastrar | - | - | vazio | Proximo produto enviado pelo usuario deve substituir esta linha ou criar a linha #2. |
+| 1 | PLA Voolt Outlet | `https://meli.la/1LzFxA3` | `F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\ChatGPT Image 13 de mai. de 2026, 15_39_41.png` | cadastrado | Filamento PLA para testes baratos, cores outlet e posts de STL gratis. |
 
 ## Regra Para Posts
 
