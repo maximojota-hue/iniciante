@@ -16,29 +16,34 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 
 1. No app principal, abra a aba `Post Web`.
 2. Defina o tema do post com foco em busca brasileira, por exemplo `melhor filamento PLA para iniciantes`.
-3. Use a pesquisa web BR + US quando quiser comparar paginas brasileiras e americanas.
-4. Carregue a planilha de afiliados se o artigo tiver produto.
-5. Selecione as fotos correspondentes aos produtos.
-6. Gere o post SEO.
-7. Publique como `draft` para revisar no WordPress.
-8. Revise titulo, slug, meta description, imagem destacada, links internos, bloco afiliado e Yoast.
-9. Publique quando estiver pronto.
+3. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
+4. Se nao houver produto afiliado para o tema, registre que o rascunho sera feito sem afiliado.
+5. Use a pesquisa web BR + US quando quiser comparar paginas brasileiras e americanas.
+6. Carregue a planilha de afiliados se o artigo tiver produto.
+7. Selecione as fotos correspondentes aos produtos.
+8. Gere o post SEO.
+9. Publique como `draft` para revisar no WordPress.
+10. Revise titulo, slug, meta description, imagem destacada, links internos, bloco afiliado e Yoast.
+11. Publique quando estiver pronto.
 
 ## Para criar post baseado em YouTube
 
 1. No app principal, abra a aba `YouTube`.
 2. Cole a URL do video escolhido.
-3. Selecione a categoria correta.
-4. Gere o post automatico.
-5. Revise o rascunho no WordPress antes de publicar.
+3. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
+4. Se nao houver afiliado para o tema, confirme que o rascunho sera feito sem afiliado.
+5. Selecione a categoria correta.
+6. Gere o post automatico.
+7. Revise o rascunho no WordPress antes de publicar.
 
 ## Quando houver produto afiliado
 
-1. Use imagem do produto dentro do texto.
-2. Coloque link afiliado na imagem abrindo em nova aba.
-3. Redimensione a imagem para nao quebrar a estetica do artigo.
-4. Inclua um CTA claro, sem parecer propaganda agressiva.
-5. Crie interlinks para posts relacionados do Clube 3D Brasil.
+1. Confirme o link afiliado e a foto correspondente antes de gerar o post.
+2. Use imagem do produto dentro do texto.
+3. Coloque link afiliado na imagem abrindo em nova aba.
+4. Redimensione a imagem para nao quebrar a estetica do artigo.
+5. Inclua um CTA claro, sem parecer propaganda agressiva.
+6. Crie interlinks para posts relacionados do Clube 3D Brasil.
 
 ## Checklist final antes de publicar
 

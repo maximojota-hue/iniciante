@@ -18,6 +18,11 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Posts criados aqui no chat: gerar texto pelo proprio Codex/ChatGPT, sem chamar API externa de conteudo.
 - Posts criados pelo app local/scripts: usar o provedor configurado em `llm_provider`.
 - Se houver `ANTHROPIC_API_KEY` e `OPENAI_API_KEY`, respeitar a escolha ativa no app/config.
+- Antes de criar qualquer post, pedir ao usuario:
+  - link afiliado do produto ou produtos;
+  - foto correspondente de cada produto;
+  - nome curto do produto, se houver mais de um.
+- Se o usuario nao tiver produto afiliado para aquele post, confirmar explicitamente que o rascunho sera criado sem afiliado.
 - Publicacao WordPress deve ir como rascunho ate revisar imagem, afiliados, Yoast e interlinks.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar post.
 
@@ -53,16 +58,17 @@ Sequencia recomendada para cada post:
 1. Definir tema prioritario pela estrategia de 30 dias.
 2. Pesquisar tendencias atuais no YouTube e/ou paginas web BR + US.
 3. Gerar estrutura SEO: titulo, slug, meta title, meta description, H1/H2/H3, FAQ e CTA.
-4. Inserir afiliados quando houver:
+4. Pedir link e foto do produto/produtos afiliados antes de escrever o post.
+5. Inserir afiliados quando houver:
    - imagem do produto dentro do texto;
    - hyperlink na imagem;
    - abrir em nova aba;
    - imagem redimensionada para nao quebrar estetica.
-5. Criar ou escolher imagem principal chamativa.
-6. Publicar como rascunho no WordPress.
-7. Revisar Yoast, categoria, interlinks e imagem destacada.
-8. Publicar.
-9. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
+6. Criar ou escolher imagem principal chamativa.
+7. Publicar como rascunho no WordPress.
+8. Revisar Yoast, categoria, interlinks e imagem destacada.
+9. Publicar.
+10. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
 
 ## Geracao de Conteudo
 
@@ -196,4 +202,3 @@ python gerar_post_web_pesquisa.py "tema do post" --categoria "Categoria"
 - `9a280a6` - Add home snippet community block updater
 - `326ee0f` - Add current hub STL community update
 - `487f364` - Optimize web post generation pipeline
-

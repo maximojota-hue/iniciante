@@ -11,6 +11,7 @@ Regras importantes:
 - Quando gerar post diretamente no chat, nao usar API externa de conteudo. Gerar no proprio chat.
 - Quando gerar post pelo app local ou por scripts do projeto, usar o provedor configurado em `llm_provider`.
 - Se houver mais de uma API cadastrada, respeitar a escolha atual de `llm_provider` (`anthropic` ou `openai`).
+- Antes de gerar qualquer post, perguntar ao usuario o link e a foto do produto/produtos afiliados. Se o usuario nao tiver afiliado para aquele post, confirmar que o rascunho sera criado sem bloco afiliado.
 - Preferir rascunho no WordPress ate revisar imagens e afiliados.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar posts.
 - Para mudancas visuais, validar com Playwright quando possivel.
