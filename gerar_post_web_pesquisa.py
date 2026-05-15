@@ -315,6 +315,8 @@ def gerar_post_por_pesquisa_web(
     affiliate_image_path: str = "",
     featured_image_path: str = "",
     source_urls: list[str] | None = None,
+    affiliates_json: str = "",
+    affiliates_file: str = "",
 ) -> dict:
     print("\n" + "=" * 70)
     print(f"Pesquisa web comparativa: {tema}")
@@ -332,7 +334,30 @@ def gerar_post_por_pesquisa_web(
 
     page_title, page_content = montar_contexto_comparativo(tema, fontes)
     afiliados_override = None
-    if affiliate_url:
+    if affiliates_file:
+        afiliados_data = json.loads(Path(affiliates_file).read_text(encoding="utf-8"))
+        afiliados_override = []
+        for item in afiliados_data:
+            nome = item.get("nome") or item.get("name") or tema
+            imagem = copiar_imagem_afiliado(item.get("imagem") or item.get("image") or "", nome)
+            afiliados_override.append({
+                "nome": nome,
+                "tipo": item.get("tipo", "filamento"),
+                "link": item.get("link", ""),
+                "imagem": imagem,
+            })
+    elif affiliates_json:
+        afiliados_override = []
+        for item in json.loads(affiliates_json):
+            nome = item.get("nome") or item.get("name") or tema
+            imagem = copiar_imagem_afiliado(item.get("imagem") or item.get("image") or "", nome)
+            afiliados_override.append({
+                "nome": nome,
+                "tipo": item.get("tipo", "filamento"),
+                "link": item.get("link", ""),
+                "imagem": imagem,
+            })
+    elif affiliate_url:
         imagem_afiliado = copiar_imagem_afiliado(affiliate_image_path, affiliate_name or tema)
         afiliados_override = [{
             "nome": affiliate_name or tema,
@@ -394,6 +419,8 @@ def main() -> None:
     parser.add_argument("--affiliate-image", default="", help="Foto do produto afiliado para aparecer no texto.")
     parser.add_argument("--featured-image", default="", help="Caminho da imagem principal do post.")
     parser.add_argument("--source-url", action="append", default=[], help="URL fonte manual. Pode repetir.")
+    parser.add_argument("--affiliates-json", default="", help="Lista JSON de afiliados com nome/link/imagem.")
+    parser.add_argument("--affiliates-file", default="", help="Arquivo JSON com lista de afiliados.")
     args = parser.parse_args()
 
     tema = args.tema or input("Tema/keyword do post: ").strip()
@@ -410,6 +437,8 @@ def main() -> None:
         affiliate_image_path=args.affiliate_image,
         featured_image_path=args.featured_image,
         source_urls=args.source_url,
+        affiliates_json=args.affiliates_json,
+        affiliates_file=args.affiliates_file,
     )
 
 

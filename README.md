@@ -110,10 +110,37 @@ O fluxo web tambem aceita fontes manuais, link afiliado e imagem principal:
 python gerar_post_web_pesquisa.py "Bambu Lab A1 Mini vale a pena" --categoria "Impressoras e Reviews" --source-url "https://exemplo.com/review" --affiliate-url "https://link-afiliado" --affiliate-name "Bambu Lab A1 Mini" --affiliate-image "foto-produto.png" --featured-image "downloads/capas/capa.jpg" --publicar
 ```
 
+Para posts com mais de um produto afiliado, use um JSON com nome, link e imagem de cada item:
+
+```json
+[
+  {
+    "nome": "Filamento PLA Branco",
+    "link": "https://link-afiliado",
+    "imagem": "F:/caminho/foto-pla-branco.png"
+  },
+  {
+    "nome": "Filamento PLA Preto",
+    "link": "https://link-afiliado",
+    "imagem": "F:/caminho/foto-pla-preto.png"
+  }
+]
+```
+
+```bash
+python gerar_post_web_pesquisa.py "melhor filamento para Bambu Lab A1 Mini" --categoria "Filamentos" --affiliates-file "afiliados.json" --featured-image "downloads/capas/capa-filamentos.jpg" --publicar
+```
+
 Para criar uma capa 16:9 a partir de uma arte de produto:
 
 ```bash
 python criar_capa_afiliado.py --input "foto-produto.png" --output "downloads/capas/capa.jpg" --headline "Bambu Lab A1 Mini"
+```
+
+Para criar uma capa 16:9 comparando dois filamentos:
+
+```bash
+python criar_capa_filamentos.py --image-a "foto-pla-branco.png" --image-b "foto-pla-preto.png" --output "downloads/capas/capa-filamentos.jpg" --headline "Melhor filamento|para A1 Mini"
 ```
 
 Para gerar um pacote Pinterest de 5 Pins:
