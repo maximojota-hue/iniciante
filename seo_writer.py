@@ -1229,3 +1229,383 @@ def gerar_post_seo(
     log(f"  Categoria: {categoria_final}")
     log(f"  Meta ({len(post['yoast_meta'])} chars): {post['yoast_meta']}")
     return post
+
+
+# Provider-aware overrides appended at the end to preserve backward compatibility
+# with the existing module while enabling local provider selection.
+
+DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
+DEFAULT_OPENAI_MODEL = "gpt-5.2"
+
+
+def _provider_read_local_env() -> dict:
+    env_data = {}
+    env_path = Path(".env")
+    if not env_path.exists():
+        return env_data
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip().lstrip("\ufeff")
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        env_data[key.strip()] = value.strip().strip('"').strip("'")
+    return env_data
+
+
+def _provider_read_local_config() -> dict:
+    config_path = Path("config.json")
+    if not config_path.exists():
+        return {}
+    try:
+        data = json.loads(config_path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _resolve_provider(provider: str | None = None) -> str:
+    provider_norm = (provider or "").strip().lower()
+    if provider_norm in {"anthropic", "openai"}:
+        return provider_norm
+
+    env_data = _provider_read_local_env()
+    env_provider = env_data.get("LLM_PROVIDER", "").strip().lower()
+    if env_provider in {"anthropic", "openai"}:
+        return env_provider
+
+    config_provider = str(_provider_read_local_config().get("llm_provider", "")).strip().lower()
+    if config_provider in {"anthropic", "openai"}:
+        return config_provider
+
+    if env_data.get("ANTHROPIC_API_KEY"):
+        return "anthropic"
+    if env_data.get("OPENAI_API_KEY") or os.environ.get("OPENAI_API_KEY", ""):
+        return "openai"
+    return "anthropic"
+
+
+def _resolve_api_key(provider: str | None = None) -> str:
+    provider_name = _resolve_provider(provider)
+    env_var = "OPENAI_API_KEY" if provider_name == "openai" else "ANTHROPIC_API_KEY"
+    key = os.environ.get(env_var, "")
+    if key:
+        return key
+    return _provider_read_local_env().get(env_var, "")
+
+
+def _resolve_model_name(provider: str) -> str:
+    env_data = _provider_read_local_env()
+    config_data = _provider_read_local_config()
+    if provider == "openai":
+        return env_data.get("OPENAI_MODEL") or str(config_data.get("openai_model", "")).strip() or DEFAULT_OPENAI_MODEL
+    return env_data.get("ANTHROPIC_MODEL") or str(config_data.get("anthropic_model", "")).strip() or DEFAULT_ANTHROPIC_MODEL
+
+
+def _call_provider_text(provider: str, system_prompt: str, user_msg: str, max_tokens: int) -> str:
+    api_key = _resolve_api_key(provider)
+    if not api_key:
+        missing = "OPENAI_API_KEY" if provider == "openai" else "ANTHROPIC_API_KEY"
+        raise ValueError(f"{missing} nao encontrado. Adicione no arquivo .env do projeto.")
+
+    if provider == "openai":
+        from openai import OpenAI
+
+        client = OpenAI(api_key=api_key)
+        response = client.responses.create(
+            model=_resolve_model_name(provider),
+            input=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_msg},
+            ],
+            max_output_tokens=max_tokens,
+        )
+        return (getattr(response, "output_text", "") or "").strip()
+
+    import anthropic
+
+    client = anthropic.Anthropic(api_key=api_key)
+    message = client.messages.create(
+        model=_resolve_model_name(provider),
+        max_tokens=max_tokens,
+        system=system_prompt,
+        messages=[{"role": "user", "content": user_msg}],
+    )
+    return message.content[0].text.strip()
+
+
+def traduzir_titulo_para_pt(titulo: str, log_fn=None, provider: str | None = None) -> str:
+    def log(msg):
+        if log_fn:
+            log_fn(msg)
+
+    if not titulo:
+        return titulo
+
+    provider_name = _resolve_provider(provider)
+    api_key = _resolve_api_key(provider_name)
+    if not api_key:
+        missing = "OPENAI_API_KEY" if provider_name == "openai" else "ANTHROPIC_API_KEY"
+        log(f"  AVISO: {missing} nao encontrado - titulo nao traduzido.")
+        return titulo
+
+    try:
+        traduzido = _call_provider_text(
+            provider=provider_name,
+            system_prompt=(
+                "Voce e um tradutor. Traduza o titulo para portugues brasileiro natural. "
+                "Se ja estiver em portugues, retorne exatamente como esta. "
+                "Responda APENAS com o titulo traduzido, sem aspas, sem explicacoes."
+            ),
+            user_msg=titulo,
+            max_tokens=150,
+        ).strip().strip('"').strip("'")
+        if traduzido:
+            log(f"  Titulo PT-BR: {traduzido}")
+            return traduzido
+    except Exception as e:
+        log(f"  AVISO: falha na traducao do titulo: {e}")
+
+    return titulo
+
+
+def gerar_post_web(
+    keyword: str,
+    secondary_kws: list = None,
+    page_url: str = "",
+    page_title: str = "",
+    page_content: str = "",
+    categoria: str = "Impressao 3D",
+    afiliados_override: list = None,
+    log_fn=None,
+    contexto_max_chars: int = 3000,
+    max_tokens: int = 3072,
+    faixa_palavras: str = "700-850",
+    provider: str | None = None,
+) -> dict:
+    def log(msg):
+        if log_fn:
+            log_fn(msg)
+        else:
+            print(msg)
+
+    provider_name = _resolve_provider(provider)
+    api_key = _resolve_api_key(provider_name)
+    if not api_key:
+        missing = "OPENAI_API_KEY" if provider_name == "openai" else "ANTHROPIC_API_KEY"
+        raise ValueError(f"{missing} nao encontrado. Adicione no arquivo .env do projeto.")
+
+    if secondary_kws is None:
+        secondary_kws = []
+
+    log(f"  Categoria: {categoria}")
+
+    if afiliados_override is not None:
+        afiliados_para_post = afiliados_override
+    else:
+        todos = _carregar_afiliados()
+        af = _escolher_afiliado(keyword, todos)
+        afiliados_para_post = [af] if af else []
+
+    if afiliados_para_post:
+        nomes = [a.get("nome") or a.get("nome_produto", "") for a in afiliados_para_post]
+        log(f"  Afiliado(s): {', '.join(nomes)}")
+    else:
+        log("  Sem afiliado para este post.")
+
+    log(f"  Provedor IA: {provider_name}")
+
+    prompt = _build_user_prompt_web(
+        keyword,
+        secondary_kws,
+        page_title,
+        page_content,
+        page_url,
+        categoria,
+        contexto_max_chars=contexto_max_chars,
+        faixa_palavras=faixa_palavras,
+    )
+    raw = ""
+
+    for attempt in range(1, 3):
+        user_msg = prompt if attempt == 1 else (
+            "O JSON abaixo esta invalido. Retorne APENAS o JSON corrigido e completo, "
+            "sem markdown, sem texto adicional:\n\n" + raw
+        )
+        raw = _reparar_json(
+            _call_provider_text(
+                provider=provider_name,
+                system_prompt=_build_system_prompt_web(categoria),
+                user_msg=user_msg,
+                max_tokens=max_tokens,
+            )
+        )
+        try:
+            data = json.loads(raw)
+            break
+        except json.JSONDecodeError as e:
+            if attempt == 2:
+                log(f"  ERRO JSON invalido apos 2 tentativas: {e}")
+                raise
+            log("  AVISO JSON invalido - solicitando correcao ao modelo...")
+
+    slug_clean = re.sub(r"[^a-z0-9]+", "-", keyword.lower()).strip("-")
+
+    post_content = data.get("post_content", "")
+    post_content += _gerar_faq_schema_do_content(post_content)
+    post_content = _injetar_blocos_afiliados(post_content, afiliados_para_post)
+    contexto_download = f"{keyword} {categoria} {page_title}".lower()
+    if any(term in contexto_download for term in ("stl", "download", "modelo", "personagem")):
+        post_content = _injetar_download_antes_faq(post_content, page_url, page_title)
+    post_content += _bloco_bridge_renda_extra()
+
+    post = {
+        "titulo": data.get("titulo", keyword),
+        "slug": data.get("slug", slug_clean),
+        "content": post_content,
+        "excerpt": data.get("meta_description", ""),
+        "status": "draft",
+        "tags": data.get("tags", ["impressao 3d", keyword]),
+        "categories": [data.get("categoria", categoria)],
+        "featured_image_path": "",
+        "yoast_keyphrase": keyword,
+        "yoast_title": data.get("seo_title", ""),
+        "yoast_meta": data.get("meta_description", ""),
+        "gerado_em": datetime.now().isoformat(),
+        "origem": "seo_writer_web",
+    }
+
+    log(f"  Post gerado: {post['titulo']}")
+    log(f"  Meta ({len(post['yoast_meta'])} chars): {post['yoast_meta']}")
+    return post
+
+
+def gerar_post_seo(
+    keyword: str,
+    secondary_kws: list = None,
+    transcript: str = "",
+    youtube_url: str = "",
+    yt_description: str = "",
+    afiliados_override: list = None,
+    log_fn=None,
+    lang: str = "pt-BR",
+    categoria: str = "",
+    provider: str | None = None,
+) -> dict:
+    def log(msg):
+        if log_fn:
+            log_fn(msg)
+        else:
+            print(msg)
+
+    provider_name = _resolve_provider(provider)
+    api_key = _resolve_api_key(provider_name)
+    if not api_key:
+        missing = "OPENAI_API_KEY" if provider_name == "openai" else "ANTHROPIC_API_KEY"
+        raise ValueError(f"{missing} nao encontrado. Adicione no arquivo .env do projeto.")
+
+    if secondary_kws is None:
+        secondary_kws = []
+
+    financas = _is_financas(categoria)
+    subniche = _get_financas_subniche(categoria) if financas else ""
+    renda_extra = _is_renda_extra(keyword, categoria)
+
+    if financas:
+        log(f"  Modo: {_FINANCAS_CATEGORIA_LABEL.get(subniche, 'Financas')} (sem relacao com impressao 3D)")
+    elif renda_extra:
+        log("  Modo: Renda Extra (angulo de monetizacao ativado)")
+
+    if financas:
+        afiliados_para_post = []
+    elif afiliados_override is not None:
+        afiliados_para_post = afiliados_override
+    else:
+        todos = _carregar_afiliados()
+        af = _escolher_afiliado(keyword, todos)
+        afiliados_para_post = [af] if af else []
+
+    if afiliados_para_post:
+        nomes = [af.get("nome") or af.get("nome_produto", "") for af in afiliados_para_post]
+        log(f"  Afiliado(s): {', '.join(nomes)}")
+    else:
+        log("  Sem afiliado para este post.")
+
+    log(f"  Provedor IA: {provider_name}")
+
+    if financas:
+        system_prompt = _build_system_prompt_financas(subniche)
+        prompt_principal = _build_user_prompt_financas(
+            keyword, secondary_kws, transcript, youtube_url, yt_description, subniche,
+        )
+    else:
+        system_prompt = _build_system_prompt(renda_extra=renda_extra, categoria=categoria)
+        prompt_principal = _build_user_prompt(
+            keyword, secondary_kws, transcript, youtube_url, yt_description,
+            renda_extra=renda_extra,
+        )
+
+    raw = ""
+
+    for attempt in range(1, 3):
+        if attempt == 1:
+            user_msg = prompt_principal
+        else:
+            user_msg = (
+                "O JSON abaixo esta invalido. Retorne APENAS o JSON corrigido e completo, "
+                "sem markdown, sem texto adicional:\n\n" + raw
+            )
+
+        raw = _reparar_json(
+            _call_provider_text(
+                provider=provider_name,
+                system_prompt=system_prompt,
+                user_msg=user_msg,
+                max_tokens=4096,
+            )
+        )
+
+        try:
+            data = json.loads(raw)
+            break
+        except json.JSONDecodeError as e:
+            if attempt == 2:
+                log(f"  ERRO JSON invalido apos 2 tentativas: {e}")
+                raise
+            log("  AVISO JSON invalido - solicitando correcao ao modelo...")
+
+    slug_clean = re.sub(r"[^a-z0-9]+", "-", keyword.lower()).strip("-")
+
+    post_content = data.get("post_content", "")
+    post_content += _gerar_faq_schema_do_content(post_content)
+    post_content = _injetar_blocos_afiliados(post_content, afiliados_para_post)
+
+    if not renda_extra and not financas:
+        post_content += _bloco_bridge_renda_extra()
+
+    if financas:
+        categoria_final = _FINANCAS_CATEGORIA_LABEL.get(subniche, "Financas")
+    elif renda_extra:
+        categoria_final = "Renda Extra"
+    else:
+        categoria_final = data.get("categoria", "Impressao 3D")
+
+    post = {
+        "titulo": data.get("titulo", keyword),
+        "slug": data.get("slug", slug_clean),
+        "content": post_content,
+        "excerpt": data.get("meta_description", ""),
+        "status": "draft",
+        "tags": data.get("tags", ([_FINANCAS_TEMA.get(subniche, "financas"), keyword] if financas else ["impressao 3d", keyword])),
+        "categories": [categoria_final],
+        "featured_image_path": "",
+        "yoast_keyphrase": keyword,
+        "yoast_title": data.get("seo_title", ""),
+        "yoast_meta": data.get("meta_description", ""),
+        "gerado_em": datetime.now().isoformat(),
+        "origem": "seo_writer",
+    }
+
+    log(f"  Post gerado: {post['titulo']}")
+    log(f"  Categoria: {categoria_final}")
+    log(f"  Meta ({len(post['yoast_meta'])} chars): {post['yoast_meta']}")
+    return post

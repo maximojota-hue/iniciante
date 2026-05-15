@@ -37,6 +37,7 @@ DEFAULT_CONFIG = {
     "wp_url": "https://clube3dbrasil.com",
     "posts_por_dia": 10,
     "wp_post_status": "draft",
+    "llm_provider": "anthropic",
     "downloads_dir": "./downloads",
     "horario_execucao": "09:00",
     "top10_habilitado": False,
@@ -97,12 +98,14 @@ class InstallerApp:
         self.wp_user = StringVar(value=self.env.get("WP_USER", ""))
         self.wp_pass = StringVar(value=self.env.get("WP_PASS", ""))
         self.anthropic_key = StringVar(value=self.env.get("ANTHROPIC_API_KEY", ""))
+        self.openai_key = StringVar(value=self.env.get("OPENAI_API_KEY", ""))
         self.telegram_invite_url = StringVar(value=self.env.get("TELEGRAM_INVITE_URL", ""))
         self.planilha_path = StringVar(value=self.config.get("planilha_path", ""))
         self.downloads_dir = StringVar(value=self.config.get("downloads_dir", "./downloads"))
         self.posts_por_dia = StringVar(value=str(self.config.get("posts_por_dia", 10)))
         self.horario_execucao = StringVar(value=self.config.get("horario_execucao", "09:00"))
         self.status_wp = StringVar(value=self.config.get("wp_post_status", "draft"))
+        self.llm_provider = StringVar(value=self.config.get("llm_provider", "anthropic"))
         self.top10_habilitado = BooleanVar(value=bool(self.config.get("top10_habilitado", False)))
 
         self._build()
@@ -148,6 +151,7 @@ class InstallerApp:
         api_box = ttk.LabelFrame(parent, text="APIs opcionais", padding=10, style="Section.TLabelframe")
         api_box.pack(fill="x", pady=(0, 10))
         self._entry(api_box, "ANTHROPIC_API_KEY", self.anthropic_key, show="*")
+        self._entry(api_box, "OPENAI_API_KEY", self.openai_key, show="*")
         self._entry(api_box, "TELEGRAM_INVITE_URL", self.telegram_invite_url)
 
         general_box = ttk.LabelFrame(parent, text="Projeto", padding=10, style="Section.TLabelframe")
@@ -163,6 +167,15 @@ class InstallerApp:
         ttk.Combobox(row, textvariable=self.status_wp, values=("draft", "publish"), state="readonly").pack(
             side="left", fill="x", expand=True
         )
+        row_llm = ttk.Frame(general_box)
+        row_llm.pack(fill="x", pady=4)
+        ttk.Label(row_llm, text="Provedor IA", width=20).pack(side="left")
+        ttk.Combobox(
+            row_llm,
+            textvariable=self.llm_provider,
+            values=("anthropic", "openai"),
+            state="readonly",
+        ).pack(side="left", fill="x", expand=True)
         ttk.Checkbutton(general_box, text="Habilitar Top 10", variable=self.top10_habilitado).pack(anchor="w", pady=4)
 
     def _build_actions(self, parent: ttk.Frame) -> None:
@@ -320,6 +333,7 @@ class InstallerApp:
             "wp_url": self.wp_url.get().strip().rstrip("/") or DEFAULT_CONFIG["wp_url"],
             "posts_por_dia": posts_por_dia,
             "wp_post_status": self.status_wp.get().strip() or "draft",
+            "llm_provider": self.llm_provider.get().strip() or "anthropic",
             "downloads_dir": self.downloads_dir.get().strip() or "./downloads",
             "horario_execucao": self.horario_execucao.get().strip() or "09:00",
             "top10_habilitado": bool(self.top10_habilitado.get()),
@@ -330,6 +344,8 @@ class InstallerApp:
             "WP_USER": self.wp_user.get().strip(),
             "WP_PASS": self.wp_pass.get().strip(),
             "ANTHROPIC_API_KEY": self.anthropic_key.get().strip(),
+            "OPENAI_API_KEY": self.openai_key.get().strip(),
+            "LLM_PROVIDER": self.llm_provider.get().strip() or "anthropic",
             "TELEGRAM_INVITE_URL": self.telegram_invite_url.get().strip(),
         }
         write_env(env_updates)

@@ -8,6 +8,9 @@ Memoria curta do projeto: leia `RESUMO_OPERACIONAL_CODEX.md` antes de retomar ta
 
 Regras importantes:
 - Nunca exibir credenciais de `.env`, `.env.helio` ou `config.json`.
+- Quando gerar post diretamente no chat, nao usar API externa de conteudo. Gerar no proprio chat.
+- Quando gerar post pelo app local ou por scripts do projeto, usar o provedor configurado em `llm_provider`.
+- Se houver mais de uma API cadastrada, respeitar a escolha atual de `llm_provider` (`anthropic` ou `openai`).
 - Preferir rascunho no WordPress ate revisar imagens e afiliados.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar posts.
 - Para mudancas visuais, validar com Playwright quando possivel.

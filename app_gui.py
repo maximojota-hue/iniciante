@@ -256,6 +256,16 @@ class App(tk.Tk):
         self._cfg_vars["planilha_path"] = var_planilha
 
         row_i += 1
+        tk.Label(frame, text="Provedor de IA", bg=BG, fg=TEXT_DIM, font=FONT).grid(
+            row=row_i, column=0, sticky=tk.W, pady=6)
+        var_llm = tk.StringVar(value="anthropic")
+        ttk.Combobox(
+            frame, textvariable=var_llm,
+            values=["anthropic", "openai"], state="readonly", width=18
+        ).grid(row=row_i, column=1, sticky=tk.W, padx=(12, 0), pady=6)
+        self._cfg_vars["llm_provider"] = var_llm
+
+        row_i += 1
         tk.Label(frame, text="Posts por dia (padrão)", bg=BG, fg=TEXT_DIM, font=FONT).grid(
             row=row_i, column=0, sticky=tk.W, pady=6)
         var_posts = tk.StringVar(value="10")
@@ -767,6 +777,7 @@ class App(tk.Tk):
             "wp_url": "https://clube3dbrasil.com", "wp_user": "",
             "wp_app_password": "", "ml_afiliado_url": "",
             "planilha_path": "", "posts_por_dia": 10, "wp_post_status": "draft",
+            "llm_provider": "anthropic",
         }
         for k, v in defaults.items():
             self.config_data.setdefault(k, v)
@@ -787,9 +798,10 @@ class App(tk.Tk):
         env_path = Path(".env")
         linhas = [l for l in (env_path.read_text(encoding="utf-8").splitlines()
                                if env_path.exists() else [])
-                  if l.split("=")[0].strip() not in ("WP_USER", "WP_PASS")]
+                  if l.split("=")[0].strip() not in ("WP_USER", "WP_PASS", "LLM_PROVIDER")]
         linhas += [f"WP_USER={self.config_data.get('wp_user','')}",
-                   f"WP_PASS={self.config_data.get('wp_app_password','')}"]
+                   f"WP_PASS={self.config_data.get('wp_app_password','')}",
+                   f"LLM_PROVIDER={self.config_data.get('llm_provider','anthropic')}"]
         env_path.write_text("\n".join(linhas) + "\n", encoding="utf-8")
 
         config_sem_creds = {k: v for k, v in self.config_data.items() if k not in CRED_KEYS}
@@ -1511,7 +1523,9 @@ class App(tk.Tk):
         self.seo_running = True
         self._seo_set_buttons(False)
         self.seo_progress.start(12)
-        self.lbl_seo_status.config(text="Gerando post SEO via Claude API...")
+        cfg = self._ler_config_atual()
+        provider = cfg.get("llm_provider", "anthropic")
+        self.lbl_seo_status.config(text=f"Gerando post SEO via {provider}...")
 
         url        = self.var_seo_url.get().strip()
         sec_raw    = self.var_seo_secondary.get().strip()
@@ -1520,11 +1534,11 @@ class App(tk.Tk):
 
         threading.Thread(
             target=self._seo_gerar_worker,
-            args=(keyword, sec_kws, transcript, url, afiliados_sel),
+            args=(keyword, sec_kws, transcript, url, afiliados_sel, provider),
             daemon=True,
         ).start()
 
-    def _seo_gerar_worker(self, keyword, secondary_kws, transcript, youtube_url, afiliados_sel=None):
+    def _seo_gerar_worker(self, keyword, secondary_kws, transcript, youtube_url, afiliados_sel=None, provider="anthropic"):
         try:
             import seo_writer
             importlib.reload(seo_writer)
@@ -1545,6 +1559,7 @@ class App(tk.Tk):
                 afiliados_override=afiliados_sel,
                 log_fn=self._seo_log_append,
                 categoria=self.var_seo_categoria.get(),
+                provider=provider,
             )
 
             # Cluster SEO: detecta tema e injeta interlinks (ignorado para Financas)
@@ -1748,7 +1763,11 @@ class App(tk.Tk):
             yt_description = meta.get("description", "")
             if titulo_yt:
                 self._seo_log_append(f"  Titulo original: {titulo_yt}")
-                titulo_yt = seo_writer.traduzir_titulo_para_pt(titulo_yt, log_fn=self._seo_log_append)
+                titulo_yt = seo_writer.traduzir_titulo_para_pt(
+                    titulo_yt,
+                    log_fn=self._seo_log_append,
+                    provider=self._ler_config_atual().get("llm_provider", "anthropic"),
+                )
             else:
                 self._seo_log_append("  Titulo nao obtido — usando keyword generica.")
                 titulo_yt = "impressao 3d"
@@ -1791,6 +1810,7 @@ class App(tk.Tk):
                 afiliados_override=afiliados_sel,
                 log_fn=self._seo_log_append,
                 categoria=self.var_seo_categoria.get(),
+                provider=self._ler_config_atual().get("llm_provider", "anthropic"),
             )
 
             # Cluster SEO: detecta tema e injeta interlinks (ignorado para Financas)
@@ -2308,18 +2328,20 @@ class App(tk.Tk):
         self.web_running = True
         self._web_set_buttons(False)
         self.web_progress.start(12)
-        self.lbl_web_status.config(text="Gerando post via Claude API...")
+        cfg = self._ler_config_atual()
+        provider = cfg.get("llm_provider", "anthropic")
+        self.lbl_web_status.config(text=f"Gerando post via {provider}...")
         sec_raw  = self.var_web_secondary.get().strip()
         sec_kws  = [k.strip() for k in sec_raw.split(",") if k.strip()]
         conteudo = self.web_content_text.get("1.0", tk.END).strip()
         url      = self.var_web_url.get().strip()
         threading.Thread(
             target=self._web_gerar_worker,
-            args=(keyword, sec_kws, url, conteudo, afiliados_sel),
+            args=(keyword, sec_kws, url, conteudo, afiliados_sel, provider),
             daemon=True,
         ).start()
 
-    def _web_gerar_worker(self, keyword, secondary_kws, page_url, page_content, afiliados_sel=None):
+    def _web_gerar_worker(self, keyword, secondary_kws, page_url, page_content, afiliados_sel=None, provider="anthropic"):
         try:
             import seo_writer
             importlib.reload(seo_writer)
@@ -2339,6 +2361,7 @@ class App(tk.Tk):
                 categoria=self.var_web_categoria.get(),
                 afiliados_override=afiliados_sel,
                 log_fn=self._web_log_append,
+                provider=provider,
             )
 
             if self.web_imagens_selecionadas:
@@ -2629,7 +2652,11 @@ class App(tk.Tk):
             yt_description = meta.get("description", "")
             if titulo_yt:
                 self._yt_log_append(f"  Título original: {titulo_yt}")
-                titulo_yt = seo_writer.traduzir_titulo_para_pt(titulo_yt, log_fn=self._yt_log_append)
+                titulo_yt = seo_writer.traduzir_titulo_para_pt(
+                    titulo_yt,
+                    log_fn=self._yt_log_append,
+                    provider=self._ler_config_atual().get("llm_provider", "anthropic"),
+                )
             else:
                 titulo_yt = "impressao 3d"
                 self._yt_log_append("  Título não obtido — usando keyword genérica.")
@@ -2656,6 +2683,7 @@ class App(tk.Tk):
                 yt_description=yt_description,
                 log_fn=self._yt_log_append,
                 categoria=categoria,
+                provider=self._ler_config_atual().get("llm_provider", "anthropic"),
             )
 
             # Cluster / interlinks

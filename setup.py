@@ -41,6 +41,8 @@ def setup():
 
     status_wp = input("  Publicar como rascunho ou publicado? [draft/publish, padrão: draft]: ").strip()
     config["wp_post_status"] = status_wp if status_wp in ["draft", "publish"] else "draft"
+    llm_provider = input("  Provedor de IA local [anthropic/openai, padrao: anthropic]: ").strip().lower()
+    config["llm_provider"] = llm_provider if llm_provider in ["anthropic", "openai"] else "anthropic"
 
     downloads_dir = input("  Pasta para salvar imagens [padrão: ./downloads]: ").strip()
     config["downloads_dir"] = downloads_dir if downloads_dir else "./downloads"
@@ -58,9 +60,16 @@ def setup():
     # ── Salvar credenciais no .env ──────────────────
     wp_user = config.pop("wp_user")
     wp_pass = config.pop("wp_app_password")
+    anthropic_key = getpass.getpass("  ANTHROPIC_API_KEY (opcional): ")
+    openai_key = getpass.getpass("  OPENAI_API_KEY (opcional): ")
     with open(".env", "w", encoding="utf-8") as f:
         f.write(f"WP_USER={wp_user}\n")
         f.write(f"WP_PASS={wp_pass}\n")
+        if anthropic_key:
+            f.write(f"ANTHROPIC_API_KEY={anthropic_key}\n")
+        if openai_key:
+            f.write(f"OPENAI_API_KEY={openai_key}\n")
+        f.write(f"LLM_PROVIDER={config.get('llm_provider', 'anthropic')}\n")
     print("✅ Credenciais salvas em '.env'  ← nunca compartilhe este arquivo")
 
     # ── Salvar demais configurações no config.json ──

@@ -78,6 +78,13 @@ Arquivos sensiveis devem ficar locais:
 
 Nunca publique esses arquivos em um repo aberto.
 
+## Regra de geracao
+
+- Post gerado diretamente no chat com o Codex: sem chamar API externa de conteudo.
+- Post gerado pelo app local ou pelos scripts: usa o provedor configurado em `llm_provider`.
+- Se houver mais de uma chave cadastrada, altere `llm_provider` para escolher entre `anthropic` e `openai`.
+- Para trocar o modelo sem alterar codigo, use `ANTHROPIC_MODEL` ou `OPENAI_MODEL` no `.env`.
+
 ## Como rodar
 
 No Windows, o caminho mais simples e abrir o instalador grafico:
