@@ -1,5 +1,7 @@
 # Resumo Operacional Codex
 
+> Atualizacao: para retomar o projeto com menos contexto e informacao mais recente, leia primeiro `MEMORIA_ATUALIZADA_CODEX.md`. Este arquivo permanece como historico operacional expandido.
+
 Este arquivo e a memoria curta do projeto. Use para retomar trabalho sem reler toda a conversa.
 
 ## Estado do repositorio
