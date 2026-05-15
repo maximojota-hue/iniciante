@@ -10,6 +10,7 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Branch usada ate aqui: `master`
 - Nicho: impressao 3D no Brasil, com foco em iniciantes, STL geek, filamentos, impressoras, reviews, modelos gratis/baratos, grupos e monetizacao por afiliados/comunidade.
 - Arquivos sensiveis: `.env`, `.env.helio`, `config.json`. Nunca exibir credenciais.
+- Controle sequencial dos posts: `CONTROLE_POSTS.md`.
 
 ## Regras Operacionais
 
@@ -23,6 +24,7 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
   - foto correspondente de cada produto;
   - nome curto do produto, se houver mais de um.
 - Se o usuario nao tiver produto afiliado para aquele post, confirmar explicitamente que o rascunho sera criado sem afiliado.
+- Todo post criado deve ser registrado em `CONTROLE_POSTS.md` com numeracao simples e status de WordPress/Telegram.
 - Publicacao WordPress deve ir como rascunho ate revisar imagem, afiliados, Yoast e interlinks.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar post.
 
@@ -66,9 +68,11 @@ Sequencia recomendada para cada post:
    - imagem redimensionada para nao quebrar estetica.
 6. Criar ou escolher imagem principal chamativa.
 7. Publicar como rascunho no WordPress.
-8. Revisar Yoast, categoria, interlinks e imagem destacada.
-9. Publicar.
-10. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
+8. Registrar ou atualizar a linha do post em `CONTROLE_POSTS.md`.
+9. Revisar Yoast, categoria, interlinks e imagem destacada.
+10. Publicar.
+11. Apos publicar, acionar divulgacao: Telegram, Pinterest e grupos.
+12. Atualizar `CONTROLE_POSTS.md` com `publicado` e `telegram enviado` quando acontecer.
 
 ## Geracao de Conteudo
 
@@ -159,6 +163,7 @@ python auditoria_seo_clube3d.py https://clube3dbrasil.com --limit 30
 
 - `AGENTS.md`: regras do projeto para o Codex.
 - `MEMORIA_ATUALIZADA_CODEX.md`: este resumo rapido.
+- `CONTROLE_POSTS.md`: lista sequencial dos posts, status WordPress e status Telegram.
 - `RESUMO_OPERACIONAL_CODEX.md`: memoria antiga/expandida.
 - `README.md`: instrucoes gerais.
 - `dashboard_30_dias.html`: plano editorial visual.
