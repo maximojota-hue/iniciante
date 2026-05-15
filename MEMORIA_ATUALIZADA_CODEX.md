@@ -31,6 +31,12 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Antes de gerar o post, solicitar foto de capa:
   - se o usuario enviar, criar a arte da capa baseada nessa foto;
   - se o usuario nao enviar, criar uma capa nova do zero coerente com o tema.
+- Para posts baseados em YouTube:
+  - nao transformar a transcricao em resumo;
+  - primeiro extrair promessa central, 3-5 fatos/erros/numeros uteis e lacunas do video;
+  - avaliar se a promessa e realista para makers brasileiros;
+  - escrever como guia original com contexto brasileiro, custo real, riscos, erros comuns e proximo passo claro;
+  - nao prometer dinheiro facil nem alegar teste proprio do Clube 3D Brasil sem evidencia.
 - Quando o usuario enviar nome curto, link afiliado e foto, registrar em `CONTROLE_AFILIADOS.md` com numeracao sequencial simples.
 - Se o usuario escolher post sem afiliado, confirmar explicitamente que o rascunho sera criado sem bloco afiliado.
 - Todo post criado deve ser registrado em `CONTROLE_POSTS.md` com numeracao simples e status de WordPress/Telegram.
@@ -92,8 +98,11 @@ Sequencia recomendada para cada post:
 ### YouTube
 
 - Skill/fluxo: `.agents/skills/youtube-trend-seo-post/`
+- Checklist de qualidade sob demanda: `.agents/skills/youtube-trend-seo-post/references/youtube-post-quality.md`
 - Script relacionado: `gerar_post_youtube.py`
 - Objetivo: procurar video sobre o tema, analisar transcricao/metadados, reescrever como post original em PT-BR com SEO.
+- Preferir ferramentas gratuitas: `yt-dlp`, legendas publicas, descricao, capitulos e metadados do video. Ao criar post aqui no chat, nao usar API externa de conteudo.
+- Prompt do `seo_writer.py` foi ajustado para evitar tom de resumo e exigir guia pratico com honestidade sobre limites/custos.
 
 ### Web BR + US
 

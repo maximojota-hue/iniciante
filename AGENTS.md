@@ -17,6 +17,8 @@ Regras importantes:
 - Depois de dizer o tema, perguntar se o usuario quer usar um afiliado cadastrado pelo numero em `CONTROLE_AFILIADOS.md`, cadastrar novo produto com nome curto/link/foto, selecionar/enviar mais 1 afiliado, ou criar sem afiliado.
 - O maximo e 3 afiliados por post. Antes de criar o post, confirmar se a lista de afiliados do post esta fechada ou se o usuario quer adicionar/selecionar mais um.
 - Antes de gerar o post, solicitar uma foto de capa. Se o usuario enviar, criar a arte da capa baseada nessa foto; se nao enviar, criar uma capa nova do zero coerente com o tema.
+- Para posts baseados em YouTube, nunca escrever como resumo de transcricao. Antes de escrever, extrair a promessa central do video, 3-5 fatos/erros/numeros uteis, avaliar se a promessa e realista para makers brasileiros e transformar isso em guia original com contexto local.
+- Posts de YouTube devem ter tom direto, honesto e pratico; incluir limites, custo real, erros comuns ou quando a ideia nao vale a pena. Nao prometer dinheiro facil nem alegar teste proprio sem evidencia.
 - Quando o usuario enviar nome curto, link afiliado e foto, registrar em `CONTROLE_AFILIADOS.md` com numeracao sequencial simples.
 - Todo post criado deve entrar em `CONTROLE_POSTS.md` com numeracao sequencial simples e status de WordPress/Telegram.
 - Preferir rascunho no WordPress ate revisar imagens e afiliados.

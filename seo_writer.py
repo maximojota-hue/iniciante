@@ -759,7 +759,11 @@ def _build_system_prompt(renda_extra: bool = False, categoria: str = "") -> str:
     base = (
         "Voce e um redator SEO especializado em impressao 3D, escrevendo para clube3dbrasil.com.\n"
         "Escreva SEMPRE em portugues brasileiro, mesmo que a transcricao esteja em outro idioma.\n"
-        "Tom tecnico-amigavel, direto e util para makers brasileiros.\n"
+        "Tom tecnico-amigavel, direto, honesto e util para makers brasileiros.\n"
+        "Nao escreva como resumo de transcricao. Transforme o video em um guia original, pratico e facil de aplicar.\n"
+        "Priorize contexto brasileiro: produtos baratos, arquivos gratis, custo de filamento, grupos, iniciantes e erros reais.\n"
+        "Seja cético quando houver promessa exagerada. Mostre vantagens, limites e quando a ideia nao vale a pena.\n"
+        "Nao alegue teste proprio do Clube 3D Brasil se o usuario nao forneceu essa evidencia.\n"
         "Responda SEMPRE com um JSON valido, sem texto fora do JSON."
     )
     angulo = _WEB_CAT_ANGULO.get(categoria, "")
@@ -854,23 +858,34 @@ def _build_user_prompt(
 **Keyword principal:** {keyword}
 **Keywords secundarias:** {secondary}
 {description_block}{transcript_block}{renda_extra_instrucoes}
+## ANTES DE ESCREVER (processo interno, nao mostrar no JSON):
+
+1. Extraia a promessa central do video e verifique se ela e realista para um maker brasileiro.
+2. Separe 3-5 aprendizados uteis da transcricao, incluindo numeros, custos, erros, exemplos ou alertas.
+3. Identifique o que falta no video e complete com contexto geral seguro sobre impressao 3D.
+4. Defina o angulo do post em uma frase: o leitor deve sair sabendo exatamente o que fazer, evitar ou comprar.
+5. Use a transcricao como fonte de ideias, nao como roteiro. Nao copie frases longas do video.
+
 ## ESTRUTURA DO post_content (HTML para WordPress - NAO inclua tag H1):
 
 1. `<p>` introducao: 1-2 frases. Keyword em `<strong>` apenas na primeira frase.
-2. `<h2><strong>` Primeiro H2: contem a keyword, curto (max. 7 palavras).
-3. Conteudo do primeiro H2 (2-3 paragrafos uteis).
+2. `<h2><strong>` Primeiro H2: contem a keyword, curto (max. 7 palavras) e responde a duvida principal sem enrolar.
+3. Conteudo do primeiro H2 (2-3 paragrafos uteis), com uma resposta direta e pratica.
 {embed_instruction}
-5. Mais 3-4 secoes `<h2><strong>` com conteudo tecnico-pratico.
-6. `<h2><strong>Consideracoes Finais</strong></h2>` - resumo de 2-3 paragrafos.
-7. `<h2><strong>{faq_heading}</strong></h2>` - 3-5 perguntas como `<h3><strong>Pergunta?</strong></h3>` + resposta de 40-80 palavras cada.
+5. Mais 3-4 secoes `<h2><strong>` com conteudo tecnico-pratico, checklist ou tabela quando ajudar.
+6. Inclua pelo menos uma secao de alerta: erros comuns, quando nao vale a pena ou custo real.
+7. `<h2><strong>Consideracoes Finais</strong></h2>` - resumo de 2-3 paragrafos com proximo passo claro.
+8. `<h2><strong>{faq_heading}</strong></h2>` - 3-5 perguntas como `<h3><strong>Pergunta?</strong></h3>` + resposta de 40-80 palavras cada.
 
 ## REGRAS DE TEXTO:
 - Portugues brasileiro, frases curtas (8-15 palavras), max. 4 frases por paragrafo
-- 900-1.100 palavras totais no post_content
+- 800-1.000 palavras totais no post_content
 - Keyword principal: max. 4 ocorrencias
 - ZERO emojis, ZERO travessao (-), ZERO ponto e virgula
 {renda_extra_links}
-- Palavras PROIBIDAS: mergulhar, navegar, robusto, crucial, garantir, alavancar, transformador, revolucionario, "vale a pena notar", "e importante mencionar", "sem mais delongas", "no mundo de hoje", "a verdade e que"
+- Nao crie secao "Principais aprendizados" ou "Key Takeaways"
+- Nao use tom de propaganda, promessa de enriquecimento facil ou chamada sensacionalista
+- Palavras PROIBIDAS: mergulhar, navegar, robusto, crucial, garantir, alavancar, transformador, revolucionario, desbloquear, potencializar, "vale a pena notar", "e importante mencionar", "sem mais delongas", "no mundo de hoje", "a verdade e que", "o segredo", "a melhor parte"
 
 ## RESPONDA APENAS COM JSON VALIDO (sem markdown, sem texto fora do JSON):
 

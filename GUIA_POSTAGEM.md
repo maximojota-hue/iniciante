@@ -35,16 +35,20 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 
 1. No app principal, abra a aba `YouTube`.
 2. Cole a URL do video escolhido.
-3. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
-4. Confirme se vai usar apenas esse afiliado ou se deseja adicionar/selecionar mais 1.
-5. Use no maximo 3 afiliados por post.
-6. Solicite foto de capa antes de gerar o post.
-7. Se a foto de capa for enviada, crie a arte baseada nela.
-8. Se a foto de capa nao for enviada, crie uma capa nova coerente com o tema.
-9. Se nao houver afiliado para o tema, confirme que o rascunho sera feito sem afiliado.
-10. Selecione a categoria correta.
-11. Gere o post automatico.
-12. Revise o rascunho no WordPress antes de publicar.
+3. Extraia metadados e transcricao com ferramentas gratuitas, preferindo `yt-dlp`.
+4. Antes de escrever, analise a promessa central do video, 3-5 fatos/erros/numeros uteis e as lacunas que precisam de contexto brasileiro.
+5. Transforme o video em guia original, nao em resumo de transcricao.
+6. Inclua limites, custo real, erros comuns ou quando a ideia nao vale a pena.
+7. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
+8. Confirme se vai usar apenas esse afiliado ou se deseja adicionar/selecionar mais 1.
+9. Use no maximo 3 afiliados por post.
+10. Solicite foto de capa antes de gerar o post.
+11. Se a foto de capa for enviada, crie a arte baseada nela.
+12. Se a foto de capa nao for enviada, crie uma capa nova coerente com o tema.
+13. Se nao houver afiliado para o tema, confirme que o rascunho sera feito sem afiliado.
+14. Selecione a categoria correta.
+15. Gere o post automatico.
+16. Revise o rascunho no WordPress antes de publicar.
 
 ## Quando houver produto afiliado
 
@@ -69,6 +73,8 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 - Existe pelo menos um link interno para outro post.
 - O aviso do Telegram esta configurado para posts publicados.
 - O conteudo pode virar Pin no Pinterest.
+- Se veio de YouTube, o texto nao parece resumo de video e traz contexto pratico para o Brasil.
+- Se veio de YouTube, existe uma secao de custo, risco, erro comum ou quando nao vale a pena.
 
 ## Atalho por linha de comando
 
