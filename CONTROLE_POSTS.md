@@ -17,6 +17,7 @@ Lista sequencial simples dos posts criados no projeto a partir do fluxo atual.
 | 1 | Melhores Sites para Baixar STL Gratis em 2026: Guia para Makers Brasileiros | `melhores-sites-baixar-stl-gratis-2026` | 3003 | publicado | telegram enviado | sem afiliado | Post pilar para o Bloco Whatsapp Stl e busca por STL gratis. |
 | 2 | Como Escolher STL Gratis Sem Desperdicar Filamento: Checklist para Iniciantes | `como-escolher-stl-gratis-sem-desperdicar-filamento` | 3007 | rascunho | nao enviado | #1 PLA Voolt Outlet | Post criado com imagem afiliada no texto e capa propria. |
 | 3 | Melhor PLA para Imprimir STL Gratis: Como Escolher Filamento Barato Sem Perder Qualidade | `melhor-pla-para-imprimir-stl-gratis` | 3013 | rascunho | nao enviado | #1 PLA Voolt Outlet; #2 Bambu Lab A1 Mini; #3 PLA Bambu Lab Beige | Post criado com 3 afiliados, capa propria e Yoast. |
+| 4 | Vale a Pena Vender Chaveiros 3D? Custos, Lucro e Realidade | `vale-a-pena-vender-chaveiros-3d` | 3019 | rascunho | nao enviado | #1 PLA Voolt Outlet; #2 Bambu Lab A1 Mini; #4 Argola para chaveiro | Post baseado na transcricao do video 0B6A_Z6-iF0, com 3 afiliados e Yoast. |
 
 ## Regra Para Novos Posts
 
