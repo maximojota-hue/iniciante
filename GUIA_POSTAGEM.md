@@ -19,14 +19,17 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 3. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
 4. Confirme se vai usar apenas esse afiliado ou se deseja adicionar/selecionar mais 1.
 5. Use no maximo 3 afiliados por post.
-6. Se nao houver produto afiliado para o tema, registre que o rascunho sera feito sem afiliado.
-7. Use a pesquisa web BR + US quando quiser comparar paginas brasileiras e americanas.
-8. Carregue a planilha de afiliados se o artigo tiver produto.
-9. Selecione as fotos correspondentes aos produtos.
-10. Gere o post SEO.
-11. Publique como `draft` para revisar no WordPress.
-12. Revise titulo, slug, meta description, imagem destacada, links internos, bloco afiliado e Yoast.
-13. Publique quando estiver pronto.
+6. Solicite foto de capa antes de gerar o post.
+7. Se a foto de capa for enviada, crie a arte baseada nela.
+8. Se a foto de capa nao for enviada, crie uma capa nova coerente com o tema.
+9. Se nao houver produto afiliado para o tema, registre que o rascunho sera feito sem afiliado.
+10. Use a pesquisa web BR + US quando quiser comparar paginas brasileiras e americanas.
+11. Carregue a planilha de afiliados se o artigo tiver produto.
+12. Selecione as fotos correspondentes aos produtos.
+13. Gere o post SEO.
+14. Publique como `draft` para revisar no WordPress.
+15. Revise titulo, slug, meta description, imagem destacada, links internos, bloco afiliado e Yoast.
+16. Publique quando estiver pronto.
 
 ## Para criar post baseado em YouTube
 
@@ -35,10 +38,13 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 3. Antes de gerar o texto, separe o link afiliado e a foto do produto ou produtos.
 4. Confirme se vai usar apenas esse afiliado ou se deseja adicionar/selecionar mais 1.
 5. Use no maximo 3 afiliados por post.
-6. Se nao houver afiliado para o tema, confirme que o rascunho sera feito sem afiliado.
-7. Selecione a categoria correta.
-8. Gere o post automatico.
-9. Revise o rascunho no WordPress antes de publicar.
+6. Solicite foto de capa antes de gerar o post.
+7. Se a foto de capa for enviada, crie a arte baseada nela.
+8. Se a foto de capa nao for enviada, crie uma capa nova coerente com o tema.
+9. Se nao houver afiliado para o tema, confirme que o rascunho sera feito sem afiliado.
+10. Selecione a categoria correta.
+11. Gere o post automatico.
+12. Revise o rascunho no WordPress antes de publicar.
 
 ## Quando houver produto afiliado
 
@@ -57,6 +63,7 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 - O slug nao esta duplicado.
 - A palavra-chave aparece no titulo, introducao e subtitulos.
 - A imagem destacada esta chamativa e relacionada ao tema.
+- A capa usou a foto enviada pelo usuario quando ela foi fornecida.
 - O Yoast esta preenchido.
 - Os links afiliados funcionam.
 - Existe pelo menos um link interno para outro post.
