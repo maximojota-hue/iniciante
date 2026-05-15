@@ -171,9 +171,10 @@ COMMUNITY_JS = f"""
               '<div class=\"c3d-community-point\"><strong>Vaquinhas</strong><span>Compra coletiva de arquivos premium quando a comunidade quer testar um modelo.</span></div>' +
               '<div class=\"c3d-community-point\"><strong>Testes reais</strong><span>Resultados, configuracoes, filamentos e alertas de makers brasileiros.</span></div>' +
             '</div>';
-          var footerForCommunity = document.querySelector('footer, .site-footer');
-          if (footerForCommunity && footerForCommunity.parentNode) {{
-            footerForCommunity.insertAdjacentElement('beforebegin', community);
+          var newsletterForCommunity = Array.from(document.querySelectorAll('section, div'))
+            .find(function(el) {{ return /Entre para o maior hub/i.test(el.textContent || ''); }});
+          if (newsletterForCommunity && newsletterForCommunity.parentNode) {{
+            newsletterForCommunity.insertAdjacentElement('beforebegin', community);
           }} else if (quickForCommunity.parentNode) {{
             quickForCommunity.parentNode.appendChild(community);
           }}
