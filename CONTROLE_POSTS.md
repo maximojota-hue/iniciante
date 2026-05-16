@@ -22,6 +22,7 @@ Lista sequencial simples dos posts criados no projeto a partir do fluxo atual.
 | 6 | Kobra X Vale a Pena? Comparativo com Bambu Lab A1 | `kobra-x-vale-a-pena-comparativo-bambu-lab-a1` | 3038 | rascunho | nao enviado | #5 Anycubic Kobra X Combo; #2 Bambu Lab A1 Mini; #1 PLA Voolt Outlet | Post baseado nas transcricoes dos videos 9FF2UnfhaBk e 8k4rUUexwUs, refeito com 3 afiliados e capa baseada na imagem comparativa enviada. |
 | 7 | Como Imprimir Figuras 3D Grandes com Qualidade | `como-imprimir-figuras-3d-grandes-com-qualidade` | 3044 | rascunho | nao enviado | #1 PLA Voolt Outlet; #2 Bambu Lab A1 Mini; #3 PLA Bambu Lab Beige | Post baseado na transcricao do video DXH71bnrFwY, com capa baseada na foto enviada e 3 afiliados. |
 | 8 | Como Ganhar Dinheiro com Impressao 3D: Nichos Mais Promissores | `como-ganhar-dinheiro-com-impressao-3d-nichos` | 3053 | publicado | telegram enviado | #1 PLA Voolt Outlet; #2 Bambu Lab A1 Mini; #3 PLA Bambu Lab Beige | Post criado pelo fluxo leve `CRIAR_POST_CLUBE3D_COM_PACOTE`, baseado no video tB7LFuwK2p0, com 3 fotos do pacote e 3 afiliados. Telegram enviado: mensagem 20993. |
+| 9 | Pokemon Pikachu STL Gratis: Modelo 3D para Imprimir | `pokemon-pikachu-stl-gratis-impressao-3d` | 3067 | rascunho | nao enviado | sem afiliado | Post de personagem 3D criado pelo fluxo `CRIAR_POST_PERSONAGEM_3D_COM_PASTA`, com fotos locais e CTA final para download no MakerWorld. |
 
 ## Regra Para Novos Posts
 
