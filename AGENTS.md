@@ -24,6 +24,7 @@ Regras importantes:
 - Todo post criado deve entrar em `CONTROLE_POSTS.md` com numeracao sequencial simples e status de WordPress/Telegram.
 - Preferir rascunho no WordPress ate revisar imagens e afiliados.
 - Para economizar tokens, quando o usuario colar um bloco iniciado por `CRIAR_POST_CLUBE3D_COM_PACOTE`, usar esse pacote como contexto principal do post. Nao reextrair transcricao completa se o pacote ja trouxer `transcricao_compacta` ou `conteudo`. Criar o post diretamente com base no pacote, mantendo as regras de capa, afiliados, Yoast, rascunho e `CONTROLE_POSTS.md`.
+- Para posts de personagens 3D por pasta, quando o usuario colar um bloco iniciado por `CRIAR_POST_PERSONAGEM_3D_COM_PASTA`, usar as fotos e o `.url` do pacote como contexto principal. Criar um artigo curto/original de personagem 3D, com foco em STL/modelo gratis, dicas de impressao, materiais e no final um CTA claro para a pagina de download. O link final deve abrir em nova aba com `rel="noopener noreferrer"`. Nao usar API externa de conteudo no chat.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar posts.
 - Para mudancas visuais, validar com Playwright quando possivel.
 - Saidas locais ficam fora do Git: `reports/`, `output/`, `downloads/`, logs e caches.
@@ -31,5 +32,6 @@ Regras importantes:
 Fluxos principais:
 - YouTube para post SEO: `.agents/skills/youtube-trend-seo-post/`
 - Web BR + US para post SEO: `gerar_post_web_pesquisa.py`
+- Personagem 3D por pasta: `abrir_preparador_personagem.bat`
 - Auditoria SEO local: `auditoria_seo_clube3d.py`
 - Dashboard editorial: `dashboard_30_dias.html`
