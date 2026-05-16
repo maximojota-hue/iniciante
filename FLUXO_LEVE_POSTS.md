@@ -43,8 +43,10 @@ Use quando o post for sobre um personagem/modelo 3D com fotos locais e uma pagin
 6. Selecione a pasta do personagem ou a pasta mae da categoria.
 7. Deixe marcado `Ler subpastas e gerar varios pacotes` para processar varias subpastas.
 8. Informe a keyword somente quando for uma pasta unica; em lote, a keyword sera inferida pelo link/atalho de cada pasta.
-9. Clique em `Gerar pacote(s)`.
-10. Cole no chat o bloco `CRIAR_POST_PERSONAGEM_3D_COM_PASTA` ou `CRIAR_VARIOS_POSTS_PERSONAGEM_3D_COM_PASTAS`.
+9. Se quiser monetizar, selecione ate 3 afiliados nos dropdowns.
+10. Para produto novo, preencha nome, link e foto em `Cadastrar novo afiliado`; isso atualiza `CONTROLE_AFILIADOS.md` e regenera `AFILIADOS_CADASTRADOS.html`.
+11. Clique em `Gerar pacote(s)`.
+12. Cole no chat o bloco `CRIAR_POST_PERSONAGEM_3D_COM_PASTA` ou `CRIAR_VARIOS_POSTS_PERSONAGEM_3D_COM_PASTAS`.
 
 O preparador identifica automaticamente:
 
@@ -52,6 +54,7 @@ O preparador identifica automaticamente:
 - o personagem pela subpasta e pelo `.url`;
 - a keyword pelo nome do atalho ou pelo slug do link, como `Pokemon Pikachu`;
 - as fotos de cada pacote, priorizando arquivos `download*.jpg` como capa.
+- ate 3 afiliados escolhidos no preparador, que entram no campo `afiliados` do pacote.
 
 Quando o usuario colar `CRIAR_POST_PERSONAGEM_3D_COM_PASTA`, o Codex deve:
 

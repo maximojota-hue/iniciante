@@ -13,7 +13,9 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import textwrap
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from tkinter import filedialog, messagebox
@@ -27,6 +29,7 @@ PACOTE_JSON = OUT_DIR / "pacote_codex_personagem.json"
 PACOTE_MD = OUT_DIR / "PACOTE_CODEX_PERSONAGEM.md"
 PACOTES_JSON = OUT_DIR / "pacotes_codex_personagens.json"
 PACOTES_MD = OUT_DIR / "PACOTES_CODEX_PERSONAGENS.md"
+AFILIADOS_MD = ROOT / "CONTROLE_AFILIADOS.md"
 
 BG = "#111827"
 BG2 = "#16213a"
@@ -36,6 +39,15 @@ MUTED = "#94a3b8"
 GREEN = "#22c55e"
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
+
+
+@dataclass
+class Afiliado:
+    id: int
+    nome: str
+    link: str
+    foto: str
+    observacoes: str = ""
 
 
 def slug_to_title(text: str) -> str:
@@ -75,6 +87,61 @@ def infer_keyword(download_label: str, download_url: str, folder: Path) -> str:
         return slug_to_title(label)
     from_url = keyword_from_url(download_url)
     return from_url or slug_to_title(folder.name)
+
+
+def carregar_afiliados() -> list[Afiliado]:
+    if not AFILIADOS_MD.exists():
+        return []
+    afiliados: list[Afiliado] = []
+    for line in AFILIADOS_MD.read_text(encoding="utf-8", errors="ignore").splitlines():
+        if not line.startswith("| ") or "|---" in line or "Nome curto" in line:
+            continue
+        cols = [col.strip() for col in line.strip("|").split("|")]
+        if len(cols) < 6 or not cols[0].isdigit():
+            continue
+        afiliados.append(
+            Afiliado(
+                id=int(cols[0]),
+                nome=cols[1],
+                link=cols[2].strip("`"),
+                foto=cols[3].strip("`"),
+                observacoes=cols[5],
+            )
+        )
+    return afiliados
+
+
+def affiliate_label(afiliado: Afiliado) -> str:
+    return f"#{afiliado.id} {afiliado.nome}"
+
+
+def append_afiliado(nome: str, link: str, foto: str, observacoes: str = "") -> Afiliado:
+    nome = nome.strip()
+    link = link.strip()
+    foto = foto.strip()
+    observacoes = observacoes.strip() or "Produto cadastrado pelo preparador de personagens 3D."
+    if not nome or not link or not foto:
+        raise ValueError("Informe nome, link e foto do afiliado.")
+    if not re.match(r"^https?://", link):
+        raise ValueError("O link do afiliado deve comecar com http:// ou https://.")
+    if not Path(foto).exists():
+        raise ValueError("A foto do afiliado nao foi encontrada.")
+
+    afiliados = carregar_afiliados()
+    next_id = max([af.id for af in afiliados], default=0) + 1
+    novo = Afiliado(next_id, nome, link, foto, observacoes)
+    row = f"| {novo.id} | {novo.nome} | `{novo.link}` | `{novo.foto}` | cadastrado | {novo.observacoes} |\n"
+    text = AFILIADOS_MD.read_text(encoding="utf-8")
+    marker = "\n## Regra Para Posts\n"
+    if marker not in text:
+        raise ValueError("Nao encontrei o marcador de regras em CONTROLE_AFILIADOS.md.")
+    text = text.replace(marker, row + marker)
+    AFILIADOS_MD.write_text(text, encoding="utf-8")
+    try:
+        subprocess.run(["python", "gerar_catalogo_afiliados.py"], cwd=ROOT, check=False, timeout=30)
+    except Exception:
+        pass
+    return novo
 
 
 def read_url_file(path: Path) -> str:
@@ -146,7 +213,7 @@ def scan_batch(root_folder: Path) -> list[dict]:
     return [scan_folder(folder) for folder in folders]
 
 
-def build_package(data: dict, keyword_override: str, categoria: str) -> dict:
+def build_package(data: dict, keyword_override: str, categoria: str, afiliados: list[dict] | None = None) -> dict:
     return {
         "versao": "pacote-codex-personagem-v1",
         "gerado_em": datetime.now().isoformat(timespec="seconds"),
@@ -170,13 +237,14 @@ def build_package(data: dict, keyword_override: str, categoria: str) -> dict:
             "foto3": data["foto3"],
             "imagens_disponiveis": data["imagens"],
         },
-        "afiliados": [],
+        "afiliados": afiliados or [],
         "regras": [
             "Gerar post em PT-BR para Clube 3D Brasil.",
             "Nao usar API externa de conteudo no chat.",
             "Publicar como rascunho no WordPress.",
             "Criar post de personagem 3D com foco em baixar STL/modelo 3D.",
             "Usar as fotos da pasta como base visual do post.",
+            "Inserir afiliados enviados no pacote com imagem clicavel, nova aba e rel sponsored.",
             "No final do post, inserir um CTA claro para acessar a pagina de download.",
             "O link de download deve abrir em nova aba com rel noopener noreferrer.",
             "Atualizar CONTROLE_POSTS.md apos publicar.",
@@ -188,12 +256,20 @@ class App(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
         self.title("Clube 3D Brasil - Pacote Personagem 3D")
-        self.geometry("980x700")
+        self.geometry("1060x840")
         self.configure(bg=BG)
         self.var_folder = tk.StringVar()
         self.var_keyword = tk.StringVar()
         self.var_categoria = tk.StringVar(value="Games & Personagens")
         self.var_batch = tk.BooleanVar(value=True)
+        self.afiliados = carregar_afiliados()
+        self.var_afiliado1 = tk.StringVar(value="Sem afiliado")
+        self.var_afiliado2 = tk.StringVar(value="Sem afiliado")
+        self.var_afiliado3 = tk.StringVar(value="Sem afiliado")
+        self.var_novo_nome = tk.StringVar()
+        self.var_novo_link = tk.StringVar()
+        self.var_novo_foto = tk.StringVar()
+        self.var_novo_obs = tk.StringVar()
         self.var_status = tk.StringVar(value="Pronto.")
         self.last_output_path = PACOTE_MD
         self._build()
@@ -236,6 +312,24 @@ class App(tk.Tk):
             values=["Games & Personagens", "STL Geek", "Cosplay Maker", "Impressao 3D para Iniciantes"],
         ).grid(row=3, column=1, sticky="w", pady=5)
 
+        afiliados_box = tk.Frame(self, bg=BG2, padx=14, pady=12)
+        afiliados_box.pack(fill=tk.X, padx=18, pady=(10, 0))
+        tk.Label(afiliados_box, text="Afiliados do pacote (ate 3)", bg=BG2, fg=FG, font=("Segoe UI", 11, "bold")).grid(row=0, column=0, columnspan=6, sticky="w", pady=(0, 8))
+        options = self._affiliate_options()
+        self.combo_af1 = self._affiliate_combo(afiliados_box, "Afiliado 1", self.var_afiliado1, options, 1, 0)
+        self.combo_af2 = self._affiliate_combo(afiliados_box, "Afiliado 2", self.var_afiliado2, options, 1, 2)
+        self.combo_af3 = self._affiliate_combo(afiliados_box, "Afiliado 3", self.var_afiliado3, options, 1, 4)
+
+        novo_box = tk.Frame(self, bg=BG2, padx=14, pady=12)
+        novo_box.pack(fill=tk.X, padx=18, pady=(10, 0))
+        tk.Label(novo_box, text="Cadastrar novo afiliado", bg=BG2, fg=FG, font=("Segoe UI", 11, "bold")).grid(row=0, column=0, columnspan=6, sticky="w", pady=(0, 8))
+        self._small_entry(novo_box, "Nome", self.var_novo_nome, 1, 0, 26)
+        self._small_entry(novo_box, "Link", self.var_novo_link, 1, 2, 34)
+        self._small_entry(novo_box, "Foto", self.var_novo_foto, 2, 0, 58)
+        ttk.Button(novo_box, text="Selecionar foto", command=lambda: self._pick_file(self.var_novo_foto)).grid(row=2, column=2, padx=(8, 16), sticky="w")
+        self._small_entry(novo_box, "Obs", self.var_novo_obs, 2, 3, 34)
+        ttk.Button(novo_box, text="Cadastrar e atualizar lista", command=self._add_afiliado).grid(row=2, column=5, padx=8, sticky="w")
+
         actions = tk.Frame(self, bg=BG, padx=18, pady=12)
         actions.pack(fill=tk.X)
         ttk.Button(actions, text="Gerar pacote(s)", style="Run.TButton", command=self._generate).pack(side=tk.LEFT)
@@ -248,6 +342,58 @@ class App(tk.Tk):
         self.output = tk.Text(out_frame, bg="#020617", fg=FG, insertbackground=FG, font=("Consolas", 10), wrap=tk.WORD)
         self.output.pack(fill=tk.BOTH, expand=True)
 
+    def _affiliate_options(self) -> list[str]:
+        return ["Sem afiliado"] + [affiliate_label(af) for af in self.afiliados]
+
+    def _affiliate_combo(self, parent, label: str, var: tk.StringVar, options: list[str], row: int, col: int) -> ttk.Combobox:
+        tk.Label(parent, text=label, bg=BG2, fg=MUTED).grid(row=row, column=col, sticky="w", pady=4, padx=(0, 6))
+        combo = ttk.Combobox(parent, textvariable=var, width=28, values=options, state="readonly")
+        combo.grid(row=row, column=col + 1, sticky="w", pady=4, padx=(0, 14))
+        return combo
+
+    def _small_entry(self, parent, label: str, var: tk.StringVar, row: int, col: int, width: int) -> None:
+        tk.Label(parent, text=label, bg=BG2, fg=MUTED).grid(row=row, column=col, sticky="w", pady=4, padx=(0, 6))
+        ttk.Entry(parent, textvariable=var, width=width).grid(row=row, column=col + 1, sticky="w", pady=4, padx=(0, 12))
+
+    def _pick_file(self, var: tk.StringVar) -> None:
+        path = filedialog.askopenfilename(filetypes=[("Imagens", "*.jpg *.jpeg *.png *.webp"), ("Todos", "*.*")])
+        if path:
+            var.set(path)
+
+    def _add_afiliado(self) -> None:
+        try:
+            novo = append_afiliado(
+                self.var_novo_nome.get(),
+                self.var_novo_link.get(),
+                self.var_novo_foto.get(),
+                self.var_novo_obs.get(),
+            )
+            self.afiliados = carregar_afiliados()
+            options = self._affiliate_options()
+            for combo in (self.combo_af1, self.combo_af2, self.combo_af3):
+                combo.configure(values=options)
+            self.var_afiliado1.set(affiliate_label(novo))
+            self.var_novo_nome.set("")
+            self.var_novo_link.set("")
+            self.var_novo_foto.set("")
+            self.var_novo_obs.set("")
+            self.var_status.set(f"Afiliado #{novo.id} cadastrado e catalogo atualizado.")
+            messagebox.showinfo("Afiliado cadastrado", f"#{novo.id} {novo.nome} foi adicionado.")
+        except Exception as exc:
+            messagebox.showerror("Erro ao cadastrar afiliado", str(exc))
+
+    def _selected_afiliados(self) -> list[dict]:
+        by_label = {affiliate_label(af): af for af in self.afiliados}
+        selected: list[Afiliado] = []
+        seen: set[int] = set()
+        for var in (self.var_afiliado1, self.var_afiliado2, self.var_afiliado3):
+            label = var.get().strip()
+            af = by_label.get(label)
+            if af and af.id not in seen:
+                selected.append(af)
+                seen.add(af.id)
+        return [asdict(af) for af in selected[:3]]
+
     def _pick_folder(self) -> None:
         folder = filedialog.askdirectory(title="Selecionar pasta do personagem 3D")
         if folder:
@@ -258,6 +404,7 @@ class App(tk.Tk):
             folder = Path(self.var_folder.get().strip())
             keyword_override = self.var_keyword.get().strip()
             categoria = self.var_categoria.get().strip()
+            afiliados = self._selected_afiliados()
             if self.var_batch.get():
                 items = scan_batch(folder)
             else:
@@ -267,6 +414,7 @@ class App(tk.Tk):
                     data,
                     keyword_override if len(items) == 1 else "",
                     categoria,
+                    afiliados,
                 )
                 for data in items
             ]
