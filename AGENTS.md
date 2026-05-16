@@ -23,6 +23,7 @@ Regras importantes:
 - Toda vez que adicionar ou alterar produto afiliado, regenerar o catalogo visual `AFILIADOS_CADASTRADOS.html` para o usuario ver rapidamente todos os produtos ja cadastrados.
 - Todo post criado deve entrar em `CONTROLE_POSTS.md` com numeracao sequencial simples e status de WordPress/Telegram.
 - Preferir rascunho no WordPress ate revisar imagens e afiliados.
+- Para economizar tokens, quando o usuario colar um bloco iniciado por `CRIAR_POST_CLUBE3D_COM_PACOTE`, usar esse pacote como contexto principal do post. Nao reextrair transcricao completa se o pacote ja trouxer `transcricao_compacta` ou `conteudo`. Criar o post diretamente com base no pacote, mantendo as regras de capa, afiliados, Yoast, rascunho e `CONTROLE_POSTS.md`.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar posts.
 - Para mudancas visuais, validar com Playwright quando possivel.
 - Saidas locais ficam fora do Git: `reports/`, `output/`, `downloads/`, logs e caches.
