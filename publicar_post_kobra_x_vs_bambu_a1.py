@@ -33,13 +33,29 @@ VIDEO_OFICIAL = "https://www.youtube.com/watch?v=8k4rUUexwUs"
 CAPA_ORIGINAL = Path(r"C:\Users\jcarlos\Pictures\Screenshots\Captura de tela 2026-05-16 102701.png")
 CAPA_PATH = Path("downloads/capas/kobra-x-vale-a-pena-comparativo-bambu-lab-a1.jpg")
 
-AFFILIATE = {
-    "id": 5,
-    "name": "Anycubic Kobra X Combo",
-    "url": "https://meli.la/1suuv4n",
-    "image": Path(r"F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\cobra x.jpg"),
-    "alt": "Anycubic Kobra X Combo para impressao 3D multicolor",
-}
+AFFILIATES = [
+    {
+        "id": 5,
+        "name": "Anycubic Kobra X Combo",
+        "url": "https://meli.la/1suuv4n",
+        "image": Path(r"F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\cobra x.jpg"),
+        "alt": "Anycubic Kobra X Combo para impressao 3D multicolor",
+    },
+    {
+        "id": 2,
+        "name": "Bambu Lab A1 Mini",
+        "url": "https://meli.la/18dLsT9",
+        "image": Path(r"F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\ChatGPT Image 13 de mai. de 2026, 20_29_02.png"),
+        "alt": "Bambu Lab A1 Mini para comparar com Anycubic Kobra X",
+    },
+    {
+        "id": 1,
+        "name": "PLA Voolt Outlet",
+        "url": "https://meli.la/1LzFxA3",
+        "image": Path(r"F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\ChatGPT Image 13 de mai. de 2026, 15_39_41.png"),
+        "alt": "PLA Voolt Outlet para testar impressoras 3D com menor custo",
+    },
+]
 
 
 def carregar_env() -> None:
@@ -99,8 +115,9 @@ def wrap(draw: ImageDraw.ImageDraw, text: str, face: ImageFont.ImageFont, max_wi
 def criar_capa() -> Path:
     if not CAPA_ORIGINAL.exists():
         raise SystemExit(f"Imagem de capa nao encontrada: {CAPA_ORIGINAL}")
-    if not AFFILIATE["image"].exists():
-        raise SystemExit(f"Imagem afiliada nao encontrada: {AFFILIATE['image']}")
+    for affiliate in AFFILIATES:
+        if not affiliate["image"].exists():
+            raise SystemExit(f"Imagem afiliada nao encontrada: {affiliate['image']}")
 
     CAPA_PATH.parent.mkdir(parents=True, exist_ok=True)
     w, h = 1200, 675
@@ -148,19 +165,21 @@ def youtube_embed(url: str) -> str:
 """
 
 
-def product_block(media_url: str) -> str:
+def product_block(item: dict, media_url: str, caption: str) -> str:
     return f"""
 <figure class="wp-block-image aligncenter" style="max-width:760px;margin:28px auto;text-align:center;">
-  <a href="{AFFILIATE['url']}" target="_blank" rel="noopener noreferrer sponsored">
-    <img src="{media_url}" alt="{AFFILIATE['alt']}" style="width:100%;max-width:760px;height:auto;border-radius:8px;" />
+  <a href="{item['url']}" target="_blank" rel="noopener noreferrer sponsored">
+    <img src="{media_url}" alt="{item['alt']}" style="width:100%;max-width:760px;height:auto;border-radius:8px;" />
   </a>
-  <figcaption style="font-size:14px;color:#666;">Produto indicado: {AFFILIATE['name']} - confira o combo pelo link afiliado.</figcaption>
+  <figcaption style="font-size:14px;color:#666;">Produto indicado: {item['name']} - {caption}</figcaption>
 </figure>
 """
 
 
-def build_content(media_url: str) -> str:
-    produto = product_block(media_url)
+def build_content(media_urls: dict[int, str]) -> str:
+    kobra = product_block(AFFILIATES[0], media_urls[5], "combo principal analisado neste comparativo.")
+    bambu = product_block(AFFILIATES[1], media_urls[2], "referencia de ecossistema simples para comparar antes da compra.")
+    pla = product_block(AFFILIATES[2], media_urls[1], "filamento para testes, benchy e primeiras calibracoes sem gastar tanto.")
     return f"""
 <p><strong>Kobra X vale a pena</strong> para quem quer uma impressora multicolor mais moderna e com promessa de menor desperdicio, mas ela ainda precisa ser analisada com calma antes de substituir a Bambu Lab A1 como escolha segura para iniciantes.</p>
 <p>Este artigo cruza duas fontes: o unboxing do canal Barbacast e o video oficial da Anycubic. A ideia nao e repetir propaganda, e sim separar o que parece forte, o que ainda precisa de teste e para quem a compra faz sentido.</p>
@@ -197,11 +216,19 @@ def build_content(media_url: str) -> str:
 <p>A Kobra X faz mais sentido para quem quer entrar no multicolor, gosta de testar novidade e aceita aprender um ecossistema menos consolidado. Tambem pode ser atraente se o preco do combo ficar realmente abaixo da A1 Combo no Brasil.</p>
 <p>Ela tambem chama atencao para quem se incomoda com desperdicio de filamento em troca de cor. Se a promessa de menos purge se confirmar em testes independentes, isso pode pesar bastante para quem imprime personagens, logos, placas e decoracao colorida.</p>
 
-{produto}
+{kobra}
 
 <h2><strong>Quando a Bambu Lab A1 ainda e mais segura</strong></h2>
 <p>A A1 ainda tende a ser a escolha mais segura para quem quer menos descoberta e mais previsibilidade. Isso nao significa que ela seja perfeita, mas o ecossistema Bambu ja tem mais usuarios, mais perfis prontos e mais conteudo de suporte.</p>
 <p>Para um iniciante absoluto, isso pesa. Quando algo da errado, encontrar resposta rapida em grupo, video e forum pode valer mais do que um recurso novo no papel.</p>
+
+{bambu}
+
+<h2><strong>Filamento para testar antes de confiar</strong></h2>
+<p>Em qualquer impressora nova, o primeiro erro e gastar filamento caro logo nos testes. Benchy, torre de temperatura, primeira camada e pecas pequenas servem para entender fluxo, retracao, aderencia e ruido antes de imprimir algo grande.</p>
+<p>Um PLA de custo menor ajuda nesse periodo de validacao. Se a maquina passar bem nos testes simples, ai faz sentido usar cores melhores para modelos multicolor ou pecas de acabamento.</p>
+
+{pla}
 
 <h2><strong>Pontos de atencao antes de comprar</strong></h2>
 <ul>
@@ -249,14 +276,17 @@ def main() -> None:
         "wp_post_status": "draft",
     }
     pub = WordPressPublisher(cfg)
-    media_id, media_url = pub.upload_media(str(AFFILIATE["image"]), alt_text=AFFILIATE["alt"])
-    if not media_id or not media_url:
-        raise SystemExit("Falha ao enviar imagem afiliada da Kobra X")
+    media_urls: dict[int, str] = {}
+    for item in AFFILIATES:
+        media_id, media_url = pub.upload_media(str(item["image"]), alt_text=item["alt"])
+        if not media_id or not media_url:
+            raise SystemExit(f"Falha ao enviar imagem afiliada #{item['id']}")
+        media_urls[item["id"]] = media_url
 
     post = {
         "titulo": TITLE,
         "slug": SLUG,
-        "content": build_content(media_url),
+        "content": build_content(media_urls),
         "excerpt": "Kobra X vale a pena? Veja comparativo honesto com Bambu Lab A1, multicolor, desperdicio, velocidade e pontos de atencao.",
         "status": "draft",
         "tags": ["kobra x", "bambu lab a1", "impressora 3d", "review impressora 3d", "multicolor"],
@@ -268,7 +298,39 @@ def main() -> None:
         "gerado_em": "2026-05-16",
         "origem": "youtube_manual_9FF2UnfhaBk_8k4rUUexwUs",
     }
-    result = pub.publicar_post(post)
+
+    existente = pub._buscar_post_por_slug(SLUG)
+    if existente:
+        media_capa_id, _ = pub.upload_media(str(capa), alt_text=f"{TITLE} para impressao 3D")
+        payload = {
+            "title": post["titulo"],
+            "content": post["content"],
+            "excerpt": post["excerpt"],
+            "status": "draft",
+        }
+        if media_capa_id:
+            payload["featured_media"] = media_capa_id
+        dados = pub._request("POST", f"posts/{existente['id']}", json=payload)
+        pub._request(
+            "POST",
+            f"posts/{existente['id']}",
+            json={
+                "meta": {
+                    "_yoast_wpseo_focuskw": post["yoast_keyphrase"],
+                    "_yoast_wpseo_title": post["yoast_title"],
+                    "_yoast_wpseo_metadesc": post["yoast_meta"],
+                }
+            },
+        )
+        result = {
+            "wp_id": existente["id"],
+            "url": dados.get("link", existente.get("link", "")),
+            "slug": SLUG,
+            "titulo": TITLE,
+            "status": "updated",
+        }
+    else:
+        result = pub.publicar_post(post)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
