@@ -19,6 +19,7 @@ Lista sequencial simples dos posts criados no projeto a partir do fluxo atual.
 | 3 | Melhor PLA para Imprimir STL Gratis: Como Escolher Filamento Barato Sem Perder Qualidade | `melhor-pla-para-imprimir-stl-gratis` | 3013 | rascunho | nao enviado | #1 PLA Voolt Outlet; #2 Bambu Lab A1 Mini; #3 PLA Bambu Lab Beige | Post criado com 3 afiliados, capa propria e Yoast. |
 | 4 | Vale a Pena Vender Chaveiros 3D? Custos, Lucro e Realidade | `vale-a-pena-vender-chaveiros-3d` | 3019 | rascunho | nao enviado | #1 PLA Voolt Outlet; #2 Bambu Lab A1 Mini; #4 Argola para chaveiro | Post baseado na transcricao do video 0B6A_Z6-iF0, com 3 afiliados e Yoast. |
 | 5 | Como Se Destacar Vendendo Impressao 3D na Shopee | `como-se-destacar-vendendo-impressao-3d` | 3025 | rascunho | nao enviado | #1 PLA Voolt Outlet; #2 Bambu Lab A1 Mini; #3 PLA Bambu Lab Beige | Post baseado na transcricao do video p-y99A4VADc, com capa baseada na foto enviada e 3 afiliados. |
+| 6 | Kobra X Vale a Pena? Comparativo com Bambu Lab A1 | `kobra-x-vale-a-pena-comparativo-bambu-lab-a1` | 3032 | rascunho | nao enviado | #5 Anycubic Kobra X Combo | Post baseado nas transcricoes dos videos 9FF2UnfhaBk e 8k4rUUexwUs, com capa baseada na imagem comparativa enviada. |
 
 ## Regra Para Novos Posts
 
