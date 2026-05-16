@@ -41,6 +41,7 @@ Cada post pode usar no maximo 3 afiliados.
 | 2 | Bambu Lab A1 Mini | `https://meli.la/18dLsT9` | `F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\ChatGPT Image 13 de mai. de 2026, 20_29_02.png` | cadastrado | Impressora compacta para iniciantes e posts de setup/primeira impressora. |
 | 3 | PLA Bambu Lab Beige | `https://amzn.to/4scbIb1` | `F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\ChatGPT Image 13 de mai. de 2026, 16_01_16.png` | cadastrado | PLA bege para acabamento limpo, miniaturas, decoracao e comparativos de filamento. |
 | 4 | Argola para chaveiro | `https://meli.la/21q3Xkn` | `F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\argola.jpg` | cadastrado | Insumo essencial para posts de chaveiros 3D, brindes e venda local. |
+| 5 | Anycubic Kobra X Combo | `https://meli.la/1suuv4n` | `F:\ia cloud programas\programas e arquivos blog monetizacao\paginas wordpress\fotos\produto afiliados\cobra x.jpg` | cadastrado | Impressora 3D combo para review, comparativos com Bambu Lab A1 e posts de primeira impressora. |
 
 ## Regra Para Posts
 

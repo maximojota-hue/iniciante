@@ -61,6 +61,13 @@ Este guia existe para voce abrir o projeto e seguir a mesma sequencia sem depend
 7. Inclua um CTA claro, sem parecer propaganda agressiva.
 8. Crie interlinks para posts relacionados do Clube 3D Brasil.
 
+## Quando cadastrar novo afiliado
+
+1. Registre o produto em `CONTROLE_AFILIADOS.md`.
+2. Rode `python gerar_catalogo_afiliados.py`.
+3. Abra `AFILIADOS_CADASTRADOS.html` para conferir imagem, numero, link e observacoes.
+4. Use o numero do catalogo quando esse produto entrar em um post.
+
 ## Checklist final antes de publicar
 
 - O post esta na categoria certa.

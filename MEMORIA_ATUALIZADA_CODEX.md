@@ -38,6 +38,7 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
   - escrever como guia original com contexto brasileiro, custo real, riscos, erros comuns e proximo passo claro;
   - nao prometer dinheiro facil nem alegar teste proprio do Clube 3D Brasil sem evidencia.
 - Quando o usuario enviar nome curto, link afiliado e foto, registrar em `CONTROLE_AFILIADOS.md` com numeracao sequencial simples.
+- Toda vez que adicionar ou alterar afiliado, regenerar `AFILIADOS_CADASTRADOS.html` para mostrar os produtos cadastrados com imagem, numero, link e observacoes.
 - Se o usuario escolher post sem afiliado, confirmar explicitamente que o rascunho sera criado sem bloco afiliado.
 - Todo post criado deve ser registrado em `CONTROLE_POSTS.md` com numeracao simples e status de WordPress/Telegram.
 - Publicacao WordPress deve ir como rascunho ate revisar imagem, afiliados, Yoast e interlinks.
@@ -187,6 +188,8 @@ python auditoria_seo_clube3d.py https://clube3dbrasil.com --limit 30
 - `MEMORIA_ATUALIZADA_CODEX.md`: este resumo rapido.
 - `CONTROLE_POSTS.md`: lista sequencial dos posts, status WordPress e status Telegram.
 - `CONTROLE_AFILIADOS.md`: lista sequencial dos produtos afiliados cadastrados.
+- `AFILIADOS_CADASTRADOS.html`: catalogo visual gerado dos afiliados cadastrados.
+- `gerar_catalogo_afiliados.py`: gera o catalogo visual a partir de `CONTROLE_AFILIADOS.md`.
 - `RESUMO_OPERACIONAL_CODEX.md`: memoria antiga/expandida.
 - `README.md`: instrucoes gerais.
 - `dashboard_30_dias.html`: plano editorial visual.

@@ -20,6 +20,7 @@ Regras importantes:
 - Para posts baseados em YouTube, nunca escrever como resumo de transcricao. Antes de escrever, extrair a promessa central do video, 3-5 fatos/erros/numeros uteis, avaliar se a promessa e realista para makers brasileiros e transformar isso em guia original com contexto local.
 - Posts de YouTube devem ter tom direto, honesto e pratico; incluir limites, custo real, erros comuns ou quando a ideia nao vale a pena. Nao prometer dinheiro facil nem alegar teste proprio sem evidencia.
 - Quando o usuario enviar nome curto, link afiliado e foto, registrar em `CONTROLE_AFILIADOS.md` com numeracao sequencial simples.
+- Toda vez que adicionar ou alterar produto afiliado, regenerar o catalogo visual `AFILIADOS_CADASTRADOS.html` para o usuario ver rapidamente todos os produtos ja cadastrados.
 - Todo post criado deve entrar em `CONTROLE_POSTS.md` com numeracao sequencial simples e status de WordPress/Telegram.
 - Preferir rascunho no WordPress ate revisar imagens e afiliados.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar posts.
