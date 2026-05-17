@@ -3,7 +3,7 @@ Atualiza o snippet 10 da home para escolher o STL em destaque por estrategia.
 
 Regra aplicada no WordPress:
 - buscar posts publicados de categorias geek/personagens/modelos;
-- pontuar por imagem destacada, download gratis, STL/3MF/modelo, personagem forte,
+- pontuar por imagem destacada, download/STL/3MF/modelo, origem MakerWorld,
   afiliado no conteudo e recencia;
 - exibir o melhor post no hero da home, com fallback fixo caso a consulta falhe.
 
@@ -96,11 +96,12 @@ PHP_FEATURED_LOGIC = r"""
             $c3d_content = (string) get_post_field( 'post_content', $c3d_post_id );
             $c3d_text = mb_strtolower( $c3d_title . ' ' . wp_strip_all_tags( $c3d_content ) );
             $c3d_cats = wp_get_post_categories( $c3d_post_id, array( 'fields' => 'slugs' ) );
+            $c3d_is_makerworld = false !== stripos( $c3d_content, 'makerworld.com' );
             $c3d_score = 0;
 
             if ( has_post_thumbnail( $c3d_post_id ) ) { $c3d_score += 18; }
             if ( preg_match( '/\b(stl|3mf|modelo|download|baixar|arquivo)\b/u', $c3d_text ) ) { $c3d_score += 20; }
-            if ( preg_match( '/\b(gratis|gratuito|free)\b/u', $c3d_text ) ) { $c3d_score += 18; }
+            if ( $c3d_is_makerworld && preg_match( '/\b(gratis|gratuito|free)\b/u', $c3d_text ) ) { $c3d_score += 18; }
             if ( preg_match( '/\b(pokemon|pikachu|mario|sonic|goku|dragonite|mewtwo|clash|pekka|bowser|personagem|fan art)\b/u', $c3d_text ) ) { $c3d_score += 16; }
             if ( preg_match( '/(meli\.la|amzn\.to|sponsored|produto recomendado)/i', $c3d_content ) ) { $c3d_score += 12; }
             if ( in_array( 'games-personagens', $c3d_cats, true ) ) { $c3d_score += 14; }
@@ -122,6 +123,29 @@ PHP_FEATURED_LOGIC = r"""
                 if ( ! $c3d_excerpt ) {
                     $c3d_excerpt = wp_trim_words( wp_strip_all_tags( $c3d_content ), 26, '...' );
                 }
+                $c3d_display_title = $c3d_title;
+                $c3d_display_excerpt = wp_trim_words( wp_strip_all_tags( $c3d_excerpt ), 28, '...' );
+                if ( ! $c3d_is_makerworld ) {
+                    $c3d_free_terms = array(
+                        'STL Grátis' => 'STL',
+                        'STL Gratis' => 'STL',
+                        'STLs gratuitos' => 'STLs',
+                        'STLs gratis' => 'STLs',
+                        'modelo gratuito' => 'modelo 3D',
+                        'modelo gratis' => 'modelo 3D',
+                        'Download STL Grátis' => 'Download STL',
+                        'Download STL Gratis' => 'Download STL',
+                        'gratuitos' => '',
+                        'gratuito' => '',
+                        'grátis' => '',
+                        'gratis' => '',
+                        'free' => '',
+                    );
+                    $c3d_display_title = str_ireplace( array_keys( $c3d_free_terms ), array_values( $c3d_free_terms ), $c3d_display_title );
+                    $c3d_display_excerpt = str_ireplace( array_keys( $c3d_free_terms ), array_values( $c3d_free_terms ), $c3d_display_excerpt );
+                    $c3d_display_title = trim( preg_replace( '/\s+/', ' ', $c3d_display_title ) );
+                    $c3d_display_excerpt = trim( preg_replace( '/\s+/', ' ', $c3d_display_excerpt ) );
+                }
                 $c3d_image = get_the_post_thumbnail_url( $c3d_post_id, 'large' );
                 if ( ! $c3d_image && preg_match( '/<img[^>]+src=["\']([^"\']+)["\']/i', $c3d_content, $c3d_match ) ) {
                     $c3d_image = esc_url_raw( $c3d_match[1] );
@@ -131,8 +155,8 @@ PHP_FEATURED_LOGIC = r"""
                 }
                 $c3d_featured_stl = array(
                     'label' => '🔥 STL em destaque da semana',
-                    'title' => $c3d_title,
-                    'excerpt' => wp_trim_words( wp_strip_all_tags( $c3d_excerpt ), 28, '...' ),
+                    'title' => $c3d_display_title,
+                    'excerpt' => $c3d_display_excerpt,
                     'url' => get_permalink( $c3d_post_id ),
                     'image' => $c3d_image,
                     'alt' => $c3d_title . ' STL para impressão 3D',
@@ -172,10 +196,16 @@ JS_HERO_BLOCK = r"""
 
 
 def aplicar_alteracoes(code: str) -> str:
-    if "$c3d_featured_stl = array(" not in code:
-        marker = "    ?>\n    <style id=\"c3d-home-structure-overrides\">"
-        if marker not in code:
-            raise RuntimeError("Marcador PHP/CSS do snippet 10 nao encontrado.")
+    marker = "    ?>\n    <style id=\"c3d-home-structure-overrides\">"
+    if marker not in code:
+        raise RuntimeError("Marcador PHP/CSS do snippet 10 nao encontrado.")
+    php_pattern = re.compile(
+        r"\n    \$c3d_featured_stl = array\(\n.*?(?=" + re.escape(marker) + r")",
+        re.S,
+    )
+    if "$c3d_featured_stl = array(" in code:
+        code, _ = php_pattern.subn(lambda _: "\n" + PHP_FEATURED_LOGIC + "\n", code, count=1)
+    else:
         code = code.replace(marker, PHP_FEATURED_LOGIC + "\n" + marker, 1)
 
     hero_pattern = re.compile(
@@ -188,6 +218,13 @@ def aplicar_alteracoes(code: str) -> str:
     )
     replacement = JS_HERO_BLOCK + "\n        var quick = document.querySelector('.quick-nav');"
     updated, count = hero_pattern.subn(replacement, code, count=1)
+    if count != 1:
+        featured_pattern = re.compile(
+            r"        var featuredStl = <\?php echo wp_json_encode\(.*?"
+            r"        var quick = document\.querySelector\('\.quick-nav'\);",
+            re.S,
+        )
+        updated, count = featured_pattern.subn(replacement, code, count=1)
     if count != 1:
         raise RuntimeError("Bloco JS do hero nao encontrado para substituicao.")
     return updated

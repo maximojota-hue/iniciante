@@ -39,6 +39,19 @@ MUTED = "#94a3b8"
 GREEN = "#22c55e"
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
+FREE_SOURCE_DOMAIN = "makerworld.com"
+
+TERMOS_PT_BR = [
+    (r"\biron\s+man\b", "Homem de Ferro (Iron Man)"),
+    (r"\bart\s+the\s+clown\b", "Art, o Palhaco (Art the Clown)"),
+    (r"(?<!the\s)\bclown\b", "Palhaco"),
+    (r"\bwonder\s+woman\b", "Mulher-Maravilha"),
+    (r"\bcaptain\s+america\b", "Capitao America"),
+    (r"\bwile\s+e\.?\s+coyote\b", "Coiote (Wile E. Coyote)"),
+    (r"\bghostface\b", "Ghostface de Panico"),
+    (r"\bgoku\s+bust\b", "Busto do Goku"),
+    (r"\bbust\s+of\s+goku\b", "Busto do Goku"),
+]
 
 
 @dataclass
@@ -62,6 +75,31 @@ def pretty_category(text: str) -> str:
     return text.title() if text else ""
 
 
+def is_free_source(url: str) -> bool:
+    return FREE_SOURCE_DOMAIN in (url or "").lower()
+
+
+def remover_chamada_gratis(text: str, download_url: str) -> str:
+    """Reserva gratis/gratuito para origem MakerWorld."""
+    if is_free_source(download_url):
+        return text
+    text = re.sub(r"\b(gratuito|gratuita|gratis|gr[áa]tis|free)\b", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s+", " ", text)
+    text = re.sub(r"\s+([:;,.])", r"\1", text)
+    return text.strip(" -_")
+
+
+def traduzir_termo_principal(text: str) -> str:
+    """Adapta nomes conhecidos para a forma mais familiar no Brasil."""
+    translated = text or ""
+    for pattern, replacement in TERMOS_PT_BR:
+        base = replacement.split(" (", 1)[0].lower()
+        if base and base in translated.lower():
+            continue
+        translated = re.sub(pattern, replacement, translated, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", translated).strip()
+
+
 def keyword_from_url(url: str) -> str:
     match = re.search(r"/models/\d+-([^/?#]+)", url or "")
     if not match:
@@ -76,6 +114,12 @@ def infer_keyword(download_label: str, download_url: str, folder: Path) -> str:
     label = download_label or ""
     if " - " in label:
         label = label.split(" - ", 1)[0]
+    label = label.replace("・", " ")
+    label = re.sub(r"Arquivo\s+3MF.*", "", label, flags=re.IGNORECASE)
+    label = re.sub(r"Fan art", "", label, flags=re.IGNORECASE)
+    label = re.sub(r"\((?:no|sem)\s+ams[^)]*\)", "", label, flags=re.IGNORECASE)
+    label = re.sub(r"[?]+", " ", label)
+    label = remover_chamada_gratis(label, download_url)
     label = re.sub(
         r"\b(modelo|gratuito|gratis|para|impressao|impressão|3d|makerworld|stl)\b",
         "",
@@ -84,9 +128,9 @@ def infer_keyword(download_label: str, download_url: str, folder: Path) -> str:
     )
     label = re.sub(r"\s+", " ", label).strip(" -_")
     if label:
-        return slug_to_title(label)
+        return traduzir_termo_principal(slug_to_title(label))
     from_url = keyword_from_url(download_url)
-    return from_url or slug_to_title(folder.name)
+    return traduzir_termo_principal(from_url or slug_to_title(folder.name))
 
 
 def carregar_afiliados() -> list[Afiliado]:
@@ -169,8 +213,8 @@ def scan_folder(folder: Path) -> dict:
         download_url = read_url_file(urls[0])
         download_label = urls[0].stem
 
-    title_base = download_label or folder.name
-    title = slug_to_title(title_base)
+    title_base = remover_chamada_gratis(download_label or folder.name, download_url)
+    title = traduzir_termo_principal(slug_to_title(title_base))
     keyword = infer_keyword(download_label, download_url, folder)
     categoria_personagem = pretty_category(folder.parent.name)
 
@@ -243,6 +287,8 @@ def build_package(data: dict, keyword_override: str, categoria: str, afiliados: 
             "Nao usar API externa de conteudo no chat.",
             "Publicar como rascunho no WordPress.",
             "Criar post de personagem 3D com foco em baixar STL/modelo 3D.",
+            "Traduzir/adaptar o termo principal para portugues brasileiro quando houver equivalente conhecido, mantendo o nome original entre parenteses quando ajudar no SEO.",
+            "So usar gratis/gratuito/STL gratis quando a origem do download for MakerWorld; para outras origens, usar termos neutros como modelo 3D, arquivo 3D, pagina do modelo ou arquivo para baixar.",
             "Usar as fotos da pasta como base visual do post.",
             "Inserir afiliados enviados no pacote com imagem clicavel, nova aba e rel sponsored.",
             "No final do post, inserir um CTA claro para acessar a pagina de download.",

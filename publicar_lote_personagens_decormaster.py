@@ -16,7 +16,12 @@ from pathlib import Path
 
 from PIL import Image
 
-from preparador_pacote_personagem import build_package, carregar_afiliados, scan_batch
+from preparador_pacote_personagem import (
+    build_package,
+    carregar_afiliados,
+    scan_batch,
+    traduzir_termo_principal,
+)
 from publisher import WordPressPublisher
 
 
@@ -66,31 +71,35 @@ def clean_name(keyword: str, download_url: str = "") -> str:
     text = re.sub(r"Fan art", "", text, flags=re.IGNORECASE)
     text = re.sub(r"\((?:no|sem)\s+ams[^)]*\)", "", text, flags=re.IGNORECASE)
     text = re.sub(r"\bCults\b", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"[?]+", " ", text)
     text = re.sub(r"\s+", " ", text).strip(" -_")
     replacements = {
         "wonder amy wonder woman x amy rose": "Wonder Amy",
         "busto de goku Arte de fa": "Busto de Goku",
         "busto de goku Arte de fã": "Busto de Goku",
         "Mario goku": "Mario Goku",
-        "iron man": "Iron Man",
+        "iron man": "Homem de Ferro (Iron Man)",
+        "art the clown": "Art, o Palhaco (Art the Clown)",
+        "ghostface": "Ghostface de Panico",
         "leatherface": "Leatherface",
         "kratos": "Kratos",
     }
     key = ascii_text(text).lower()
     for raw, value in replacements.items():
         if key == ascii_text(raw).lower():
-            return value
+            return traduzir_termo_principal(value)
     if not text and download_url:
         text = download_url.rstrip("/").split("/")[-1].replace("-", " ")
-    return text[:1].upper() + text[1:] if text else "Personagem 3D"
+    text = text[:1].upper() + text[1:] if text else "Personagem 3D"
+    return traduzir_termo_principal(text)
 
 
 def title_for(name: str) -> str:
-    return f"{name} 3MF Gratis: Fan Art para Imprimir em 3D"
+    return f"{name} 3MF: Fan Art para Imprimir em 3D"
 
 
 def keyphrase_for(name: str) -> str:
-    return f"{name} 3MF gratis"
+    return f"{name} 3MF"
 
 
 def next_post_number() -> int:
@@ -253,7 +262,7 @@ def content_for(name: str, pacote: dict, afiliados: list[dict], media_urls: dict
 
 {download_cta(name, url, label)}
 
-<h2>Perguntas frequentes sobre {name} 3MF gratis</h2>
+<h2>Perguntas frequentes sobre {name} 3MF</h2>
 
 <h3>Esse modelo precisa de AMS?</h3>
 <p>Nem sempre. Muitos modelos multiparts permitem imprimir cada peca em uma cor diferente e montar depois, sem AMS.</p>
@@ -316,7 +325,7 @@ def main() -> None:
 
     for pacote in packages:
         name = clean_name(pacote["keyword_alvo"], pacote["fonte"]["download_url"])
-        slug = slugify(f"{name} 3MF gratis impressao 3D")
+        slug = slugify(f"{name} 3MF impressao 3D")
         if controle_has_slug(slug):
             skipped.append(name)
             continue
@@ -331,13 +340,13 @@ def main() -> None:
             "titulo": title,
             "slug": slug,
             "content": content_for(name, pacote, afiliados, media_urls),
-            "excerpt": f"Baixe o modelo 3MF gratuito do {name} e veja dicas de PLA, montagem, escala e acabamento.",
+            "excerpt": f"Veja o modelo 3MF do {name} e confira dicas de PLA, montagem, escala e acabamento.",
             "status": "draft",
             "categories": [CATEGORY],
-            "tags": ["Cults", "Fan art", name, "3MF gratis", "impressao 3D"],
+            "tags": ["Cults", "Fan art", name, "3MF", "impressao 3D"],
             "yoast_keyphrase": keyphrase,
-            "yoast_title": f"{name} 3MF Gratis para Impressao 3D",
-            "yoast_meta": f"Veja o {name} 3MF gratis para imprimir em 3D, com dicas de PLA, montagem, acabamento e link para baixar no Cults.",
+            "yoast_title": f"{name} 3MF para Impressao 3D",
+            "yoast_meta": f"Veja o {name} 3MF para imprimir em 3D, com dicas de PLA, montagem, acabamento e link para acessar a pagina no Cults.",
             "imagens_lista": images,
         }
         print(f"PUBLICANDO: {title}")

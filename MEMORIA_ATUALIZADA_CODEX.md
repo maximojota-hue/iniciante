@@ -43,6 +43,13 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Todo post criado deve ser registrado em `CONTROLE_POSTS.md` com numeracao simples e status de WordPress/Telegram.
 - Publicacao WordPress deve ir como rascunho ate revisar imagem, afiliados, Yoast e interlinks.
 - Para tendencias atuais, pesquisar ao vivo antes de gerar post.
+- Regra de gratuidade:
+  - usar `gratis`, `gratuito`, `STL gratis`, `modelo gratuito` ou chamadas equivalentes somente quando a origem/download for `https://makerworld.com/`;
+  - para Cults, Printables, paginas externas ou origem incerta, usar termos neutros como `modelo 3D`, `arquivo 3D`, `3MF`, `pagina do modelo`, `arquivo para baixar` ou `acessar pagina original`.
+- Regra de idioma do termo principal:
+  - o publico principal e brasileiro, entao traduzir/adaptar o termo principal para PT-BR quando houver equivalente conhecido;
+  - exemplos: `Iron Man` -> `Homem de Ferro (Iron Man)`, `Art the Clown` -> `Art, o Palhaco (Art the Clown)`, `Captain America` -> `Capitao America`, `Wonder Woman` -> `Mulher-Maravilha`, `Wile E. Coyote` -> `Coiote (Wile E. Coyote)`;
+  - usar o termo em portugues no titulo, H1, slug, meta description e primeiros paragrafos, mantendo o nome original entre parenteses quando ajudar no SEO.
 
 ## Estado Atual do Site
 
@@ -69,7 +76,7 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Destaque principal da home agora usa curadoria estrategica no snippet `10`:
   - script de manutencao: `atualizar_snippet10_destaque_estrategico.py`;
   - busca posts publicados em `Games & Personagens`, `STL Geek`, `Modelos STL` e `Clash Royale`;
-  - pontua por imagem destacada, termos de download/STL/3MF/modelo, gratuidade, personagem forte, afiliado e recencia;
+  - pontua por imagem destacada, termos de download/STL/3MF/modelo, origem MakerWorld quando houver chamada de gratuidade, personagem forte, afiliado e recencia;
   - troca automaticamente quando existir post com maior potencial de clique/conversao.
 - Screenshot de validacao: `output/playwright/home-whatsapp-stl-posicao-rosa.png`.
 - Ultimo commit relacionado: `5efd688 Place WhatsApp STL block before community section`.

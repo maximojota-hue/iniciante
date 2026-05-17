@@ -16,6 +16,8 @@ Este arquivo e a memoria curta do projeto. Use para retomar trabalho sem reler t
   - Post gerado no chat: sem uso de API externa de conteudo.
   - Post gerado pelo app local/scripts: usar o provedor selecionado em `llm_provider`.
   - Se `ANTHROPIC_API_KEY` e `OPENAI_API_KEY` estiverem presentes, a escolha ativa fica no `config.json`.
+  - Usar `gratis/gratuito/STL gratis` somente quando a origem for MakerWorld.
+  - Traduzir/adaptar o termo principal para PT-BR quando houver equivalente conhecido, mantendo o nome original entre parenteses quando ajudar no SEO.
 - `code-review-graph` ativo e registrado com alias `clube3d`.
 - Ultima ativacao do grafo: 60 arquivos, 528 nos, 6043 arestas, 83 fluxos e 36 comunidades.
 - Wiki estrutural gerada em `.code-review-graph/wiki/`, ignorada pelo Git.

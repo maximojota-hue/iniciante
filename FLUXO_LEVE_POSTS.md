@@ -55,6 +55,13 @@ O preparador identifica automaticamente:
 - a keyword pelo nome do atalho ou pelo slug do link, como `Pokemon Pikachu`;
 - as fotos de cada pacote, priorizando arquivos `download*.jpg` como capa.
 - ate 3 afiliados escolhidos no preparador, que entram no campo `afiliados` do pacote.
+- termos principais conhecidos sao adaptados para PT-BR, por exemplo `Iron Man` vira `Homem de Ferro (Iron Man)` e `Art the Clown` vira `Art, o Palhaco (Art the Clown)`.
+
+Regras importantes para personagem/modelo:
+
+- So usar `gratis`, `gratuito`, `STL gratis` ou `modelo gratuito` quando o link de origem for MakerWorld (`https://makerworld.com/`).
+- Para Cults, Printables ou origem incerta, usar termos neutros: `modelo 3D`, `arquivo 3D`, `3MF`, `pagina do modelo`, `arquivo para baixar`.
+- Traduzir/adaptar o termo principal para o publico brasileiro quando houver equivalente conhecido.
 
 Quando o usuario colar `CRIAR_POST_PERSONAGEM_3D_COM_PASTA`, o Codex deve:
 
