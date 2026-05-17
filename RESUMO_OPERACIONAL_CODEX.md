@@ -33,7 +33,8 @@ Alteracoes feitas via WordPress REST e Code Snippets:
   - `hub-monetizacao-3d`
   - `hub-modelagem-3d`
 - Home visual atualizada no snippet `10`, ativo:
-  - Hero principal sobre `Porta-Pipoca do Bowser Jr impresso em 3D`
+  - Hero principal com destaque estrategico automatico de STL/personagem
+  - Script local de manutencao: `atualizar_snippet10_destaque_estrategico.py`
   - Cards de caminho: Iniciantes, STL Geek, Games & Personagens, Cosplay Maker, Reviews, Ganhar Dinheiro
 - Categorias consolidadas:
   - `STL, Modelos e Personagens` slug `stl-geek`

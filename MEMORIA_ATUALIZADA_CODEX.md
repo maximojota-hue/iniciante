@@ -66,6 +66,11 @@ Use este arquivo como ponto de partida rapido antes de mexer no projeto. Ele res
 - Posicao correta atual: entre os cards de `Publicados recentemente` e a secao `Entre para o maior hub de makers do Brasil`.
 - Script da hub atual: `atualizar_hub_atual_stl_grupos.py`.
 - Script do snippet visual da home: `atualizar_snippet10_home_comunidade.py`.
+- Destaque principal da home agora usa curadoria estrategica no snippet `10`:
+  - script de manutencao: `atualizar_snippet10_destaque_estrategico.py`;
+  - busca posts publicados em `Games & Personagens`, `STL Geek`, `Modelos STL` e `Clash Royale`;
+  - pontua por imagem destacada, termos de download/STL/3MF/modelo, gratuidade, personagem forte, afiliado e recencia;
+  - troca automaticamente quando existir post com maior potencial de clique/conversao.
 - Screenshot de validacao: `output/playwright/home-whatsapp-stl-posicao-rosa.png`.
 - Ultimo commit relacionado: `5efd688 Place WhatsApp STL block before community section`.
 
